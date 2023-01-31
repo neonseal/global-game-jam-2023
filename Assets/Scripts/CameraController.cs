@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour
     private InputActions inputActions;
 
     [Header("Movement Variables")]
-    [SerializeField] private float speed = 4f;
+    [SerializeField] private float speed = 20f;
     private Vector2 inputVector;
 
     private void Awake() {
