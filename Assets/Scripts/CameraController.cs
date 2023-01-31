@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
 {
     [Header("Camera Components")]
     private Rigidbody rb;
-    private PlayerControls playerControls;
+    private InputActions inputActions;
 
     [Header("Movement Variables")]
     [SerializeField] private float speed = 4f;
@@ -15,11 +15,11 @@ public class CameraController : MonoBehaviour
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
-        playerControls = new PlayerControls();
+        inputActions = new InputActions();
     }
 
     private void Update() {
-        inputVector = playerControls.Player.Movement.ReadValue<Vector2>().normalized;
+        inputVector = inputActions.ActionMap.Movement.ReadValue<Vector2>().normalized;
     }
 
     private void FixedUpdate() {
@@ -28,10 +28,10 @@ public class CameraController : MonoBehaviour
     }
 
     private void OnEnable() {
-        playerControls.Enable();
+        inputActions.Enable();
     }
 
     private void OnDisable() {
-        playerControls.Disable();
+        inputActions.Disable();
     }
 }
