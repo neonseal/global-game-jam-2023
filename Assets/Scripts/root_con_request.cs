@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class root_con_request : MonoBehaviour
 {
+
+    [SerializeField]
+    private bool connected = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -12,7 +16,11 @@ public class root_con_request : MonoBehaviour
 
     private void connectRoots()
     {
-        Debug.Log("Someone wants to connect with me?! really? ;(");
+        if(connected == false)
+        {
+            connected = true;
+        }
+        
     }
 
     private void onDisable()
