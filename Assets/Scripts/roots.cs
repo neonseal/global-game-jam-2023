@@ -5,7 +5,7 @@ using UnityEngine;
 public class roots : MonoBehaviour
 {
     [SerializeField]
-    private float radius = 1f;
+    private float radius = 5.0f;
 
     [SerializeField]
     // int for max of colliders to be found in collider sphere
@@ -31,16 +31,11 @@ public class roots : MonoBehaviour
 
         for (int i = 0; i < numColliders; i++)
         {
-            colliders[i].SendMessage("connectRoots()");
+            colliders[i].SendMessage("connectRoots", gameObject.name);
+            Debug.Log("Hello: " + colliders[i].name);
         }
 
     }
-
-    private void connectRoots()
-    {
-        Debug.Log("Someone wants to connect with me?! really? ;(");
-    }
-
 
     private void onDisable()
     {
