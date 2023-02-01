@@ -16,10 +16,11 @@ public class root_con_request : MonoBehaviour
 
     private void connectRoots()
     {
-        if ( connected = false)
+        if(connected == false)
         {
             connected = true;
         }
+        
     }
 
     private void onDisable()

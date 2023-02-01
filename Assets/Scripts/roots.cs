@@ -31,8 +31,10 @@ public class roots : MonoBehaviour
 
         for (int i = 0; i < numColliders; i++)
         {
-            colliders[i].SendMessage("connectRoots", gameObject.name);
-            
+            if(colliders[i] != null) 
+            {
+                colliders[i].SendMessage("connectRoots", gameObject.name);
+            }
         }
 
     }

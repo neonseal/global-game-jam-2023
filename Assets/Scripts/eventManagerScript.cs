@@ -9,12 +9,10 @@ public class eventManagerScript : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (ExampleEvent != null)
         {
-            if (ExampleEvent != null)
-            {
-                ExampleEvent();
-            }
+            ExampleEvent();
         }
+        
     }
 }
