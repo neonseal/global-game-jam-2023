@@ -14,7 +14,7 @@ public class roots : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        eventManagerScript.ExampleEvent += KNearestNeighbours;
+        eventManagerScript.UpdateEvent += KNearestNeighbours;
     }
 
     private void KNearestNeighbours()
@@ -37,11 +37,10 @@ public class roots : MonoBehaviour
                 //colliders[i].SendMessage("connectRoots", gameObject.name);
             }
         }
-
     }
 
     private void onDisable()
     {
-        eventManagerScript.ExampleEvent -= KNearestNeighbours;
+        eventManagerScript.UpdateEvent -= KNearestNeighbours;
     }
 }

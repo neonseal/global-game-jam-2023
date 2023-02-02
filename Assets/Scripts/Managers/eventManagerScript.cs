@@ -5,13 +5,13 @@ using System;
 
 public class eventManagerScript : MonoBehaviour
 {
-    public static event Action ExampleEvent;
+    public static event Action UpdateEvent;
 
     private void Update()
     {
-        if (ExampleEvent != null)
+        if (UpdateEvent != null)
         {
-            ExampleEvent();
+            UpdateEvent();
         }
         
     }

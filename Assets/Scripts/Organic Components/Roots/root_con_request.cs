@@ -11,7 +11,7 @@ public class root_con_request : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        eventManagerScript.ExampleEvent += connectRoots;
+        eventManagerScript.UpdateEvent += connectRoots;
     }
 
     private void connectRoots()
@@ -19,12 +19,11 @@ public class root_con_request : MonoBehaviour
         if(connected == false)
         {
             connected = true;
-        }
-        
+        }        
     }
 
     private void onDisable()
     {
-        eventManagerScript.ExampleEvent -= connectRoots;
+        eventManagerScript.UpdateEvent -= connectRoots;
     }
 }
