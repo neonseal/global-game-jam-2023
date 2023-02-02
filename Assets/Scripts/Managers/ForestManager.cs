@@ -23,13 +23,16 @@ public class ForestManager : MonoBehaviour {
     [SerializeField] private float timerResetValue = 5.0f;
 
     [Header("Failing Resources")]
-    [SerializeField] private string[] activeSystems;
+    [SerializeField] private List<string> activeSystems;
 
     private void Awake() {
         timer = timerResetValue;
 
         treeSupply = new TreeComponent[0];
-        activeSystems = new string[] { "Water", "Energy", "Organic" };
+        activeSystems = new List<string>();
+        activeSystems.Add("Water");
+        activeSystems.Add("Energy");
+        activeSystems.Add("Organic");
     }
 
     private void Update() {
@@ -98,6 +101,13 @@ public class ForestManager : MonoBehaviour {
     private void ActivateResourceState(string resource) {
         if (Array.IndexOf(activeSystems, resource) == -1) {
             activeSystems[activeSystems.Length] = resource;
+        }
+        // Trigger Generator To Increase State
+    }
+
+    private void DeactivateResourceState(string resource) {
+        if (Array.IndexOf(activeSystems, resource) > -1) {
+            activeSystems
         }
         // Trigger Generator To Increase State
     }
