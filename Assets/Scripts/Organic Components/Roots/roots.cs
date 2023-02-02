@@ -14,7 +14,7 @@ public class roots : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        eventManagerScript.UpdateEvent += KNearestNeighbours;
+        EventManager.UpdateEvent += KNearestNeighbours;
     }
 
     private void KNearestNeighbours()
@@ -41,6 +41,6 @@ public class roots : MonoBehaviour
 
     private void onDisable()
     {
-        eventManagerScript.UpdateEvent -= KNearestNeighbours;
+        EventManager.UpdateEvent -= KNearestNeighbours;
     }
 }

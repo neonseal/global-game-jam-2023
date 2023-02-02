@@ -18,11 +18,18 @@ public class ForestManager : MonoBehaviour {
     [SerializeField] private float totalOrganic = 100.0f;
 
     [Header("Timer")]
-    private float timer = 1.0f;
-    private float timerResetValue = 1.0f;
+    private float timer;
+    [SerializeField] private float timerResetValue = 5.0f;
+
+    [Header("Failing Resources")]
+    [SerializeField] private string[] activeFailedStates;
 
     private void Awake() {
+        timer = timerResetValue;
 
+        treeSupply = new TreeComponent[0];
+
+        activeFailedStates = new string[0];
     }
 
     private void Update() {
@@ -35,9 +42,8 @@ public class ForestManager : MonoBehaviour {
             ApplyForestMaintenanceCost();
 
             if (totalWater == 0 && totalEnergy == 0 && totalOrganic == 0) {
-                TriggerGameOverState();
+                TriggerGeneratorKillMode();
             }
-
 
             timer = timerResetValue;
         }
@@ -49,6 +55,13 @@ public class ForestManager : MonoBehaviour {
         // Call GetCurrentGenerationRate function
         // Total generation rate and add to total
         // If previous total was zero, trigger generator state change 
+
+
+
+
+
+
+
         float treeCost = 3 * treeCount;
         float sunflowerCost = 2 * sunflowerCount;
         float decomposerCost = 1 * decomposerCount;
@@ -57,7 +70,6 @@ public class ForestManager : MonoBehaviour {
         totalWater += (sunflowerCost + decomposerCost);
         totalEnergy += (treeCost + decomposerCost);
         totalOrganic += (treeCost + sunflowerCost);
-
     }
 
     private void ApplyForestMaintenanceCost() {
@@ -66,17 +78,24 @@ public class ForestManager : MonoBehaviour {
         // Calculate total cost to maintain forest
         // Substract from each total
         // Check if each total == 0, trigger generator state change
-        float treeCost = 5 * treeCount;
-        float sunflowerCost = 3 * sunflowerCount;
+        float treeCost = 3 * treeCount;
+        float sunflowerCost = 2 * sunflowerCount;
         float decomposerCost = 1 * decomposerCount;
 
-
-        totalWater -= (sunflowerCost + decomposerCost) / 2;
-        totalEnergy -= (treeCost + decomposerCost) / 2;
-        totalOrganic -= (treeCost + sunflowerCost) / 2;
+        totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
+        totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
+        totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
     } 
 
-    private void TriggerGameOverState() {
-        Debug.Log("GAME OVER!");
+    private float AttemptDecrement(float target, float decrement) {
+        if (target - decrement < 0) {
+            return 0;
+        }
+
+        return target -= decrement;
+    }
+
+    private void TriggerGeneratorKillMode() {
+        Debug.Log("GENERATOR IS EATING!");
     }
 }

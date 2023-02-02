@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class eventManagerScript : MonoBehaviour
+public class EventManager : MonoBehaviour
 {
     public static event Action UpdateEvent;
 
