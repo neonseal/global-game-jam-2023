@@ -33,7 +33,8 @@ public class roots : MonoBehaviour
         {
             if(colliders[i] != null) 
             {
-                colliders[i].SendMessage("connectRoots", gameObject.name);
+                // TODO: Check to see if collider can accept root connection to fix error in console
+                //colliders[i].SendMessage("connectRoots", gameObject.name);
             }
         }
 
