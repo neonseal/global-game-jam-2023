@@ -1,37 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.InputSystem;
+ 
+public class CameraController : MonoBehaviour {
+    [Header("Speed Controls")]
+    [SerializeField] private float movementSpeed = 2f;
+    [SerializeField] private float movementTime = 5f;
 
-public class CameraController : MonoBehaviour
-{
-    [Header("Camera Components")]
-    private Rigidbody rb;
     private InputActions inputActions;
-
-    [Header("Movement Variables")]
-    [SerializeField] private float speed = 4f;
-    private Vector2 inputVector;
+    private Vector3 movementVector;
 
     private void Awake() {
-        rb = GetComponent<Rigidbody>();
         inputActions = new InputActions();
     }
 
     private void Update() {
-        inputVector = inputActions.ActionMap.Movement.ReadValue<Vector2>().normalized;
+        Vector3 inputVector = inputActions.ActionMap.CameraMovement.ReadValue<Vector2>().normalized;
+        movementVector = new Vector3(inputVector.x, transform.position.y, inputVector.y);
     }
 
     private void FixedUpdate() {
-        Vector3 movementVector = new Vector3(inputVector.x, rb.position.y, inputVector.y);
-        rb.MovePosition(rb.position + movementVector * speed * Time.fixedDeltaTime);
+        Vector3 newPosition = transform.position + movementVector * movementSpeed;
+        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
     }
 
     private void OnEnable() {
         inputActions.Enable();
     }
 
-    private void OnDisable() {
+    private void onDisable()
+    {
         inputActions.Disable();
     }
 }
