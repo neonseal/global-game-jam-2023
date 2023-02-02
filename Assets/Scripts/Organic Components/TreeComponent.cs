@@ -19,20 +19,15 @@ public class TreeComponent : MonoBehaviour
         organicComponent = new OrganicComponent(maintenanceCost, energyBuildCost, waterBuildCost, organicBuildCost, maxHealth);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         // Resource generators are less effective if they have taken damage
-        resourceGenerator.AmountPerCycle = resourceGenerator.BaseAmountPerCycle * (organicComponent.Health / 100)
+        resourceGenerator.AmountPerCycle = resourceGenerator.BaseAmountPerCycle * (organicComponent.Health / 100);
     }
 
-    void GetCurrentGenerated
+    private float GetCurrentGenerationRate() {
+        return resourceGenerator.AmountPerCycle;
+    }
 
     // Calculate cost to sustain this tree based on its current health
     public float CalculateMaintenanceCost() {
