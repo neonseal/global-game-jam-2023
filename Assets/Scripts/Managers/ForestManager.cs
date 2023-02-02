@@ -99,17 +99,17 @@ public class ForestManager : MonoBehaviour {
     }
 
     private void ActivateResourceState(string resource) {
-        if (Array.IndexOf(activeSystems, resource) == -1) {
-            activeSystems[activeSystems.Length] = resource;
+        if (!activeSystems.Contains(resource)) {
+            activeSystems.Add(resource);
         }
         // Trigger Generator To Increase State
     }
 
     private void DeactivateResourceState(string resource) {
-        if (Array.IndexOf(activeSystems, resource) > -1) {
-            activeSystems
+        if (activeSystems.Contains(resource)) {
+            activeSystems.Remove(resource);
         }
-        // Trigger Generator To Increase State
+        // Trigger Generator To Decrease State
     }
 
     private void ApplyForestMaintenanceCost() {
@@ -126,6 +126,11 @@ public class ForestManager : MonoBehaviour {
         totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
         totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
     }
+
+    private void HandleWaterResourceConsumption() {
+        float lastTotalValue = totalWater;
+    }
+
 
     private float AttemptDecrement(float target, float decrement) {
         if (target - decrement < 0) {
