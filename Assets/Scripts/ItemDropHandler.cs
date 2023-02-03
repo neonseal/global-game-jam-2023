@@ -20,20 +20,28 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
             GameObject[] items = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().inventoryItems;
             if (items != null) {
                 GameObject selectedTile = cursorManager.CalculateRayCastHitGameObject();
-                PlaceGameObject(items, selectedTile.transform.position);
+                GameObject newComponent = PlaceGameObject(items, selectedTile.transform.position);
+                PlaySoundEffect(newComponent);
             }
         }
     }
 
-    private void PlaceGameObject(GameObject[] inventoryItems, Vector3 tilePosition) {
+    private GameObject PlaceGameObject(GameObject[] inventoryItems, Vector3 tilePosition) {
         int selectedItemIndex = 0;
         if (inventoryItems.Length > 1) {
             selectedItemIndex = Random.Range(0, inventoryItems.Length - 1);
         }
-        Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + 1, tilePosition.z);
-        Debug.Log(itemPosition);
+        Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + .35f, tilePosition.z);
         Transform parentTransform = GameObject.FindGameObjectWithTag("ComponentLayer").transform;
         Quaternion rotation = Quaternion.LookRotation(-Camera.main.transform.forward);
-        Instantiate(inventoryItems[selectedItemIndex], itemPosition, rotation, parentTransform);
+
+        return Instantiate(inventoryItems[selectedItemIndex], itemPosition, rotation, parentTransform);
+    }
+
+    private void PlaySoundEffect(GameObject component) {
+        AudioSource audioSource = component.GetComponent<AudioSource>();
+        if (audioSource != null) {
+            audioSource.Play();
+        }
     }
 }
