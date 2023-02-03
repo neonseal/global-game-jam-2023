@@ -8,6 +8,14 @@ public class CursorManager : MonoBehaviour
     [SerializeField]
     private Texture2D cursorTexture;
 
+    [SerializeField]
+    private Texture2D cursorBlock;
+
+    [SerializeField]
+    private Vector2 hotSpot;
+
+    private CursorMode cursorMode = CursorMode.Auto;
+
     void Start()
     {
         //Start generating energy.
@@ -18,9 +26,44 @@ public class CursorManager : MonoBehaviour
     // Update is called once per frame
     void CursorFunction()
     {
-    	Cursor.SetCursor(cursorTexture, new Vector2(10,10), CursorMode.Auto);
+        //Check for mouse click 
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit raycastHit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out raycastHit, 100f))
+            {
+                if (raycastHit.transform != null)
+                {
+                   //Our custom method. 
+                    CurrentClickedGameObject(raycastHit.transform.gameObject);
+                }
+            }
+        }
+
+    void CurrentClickedGameObject(GameObject gameObject)
+    {
+        if(gameObject.tag=="interactable")
+        {
+            Debug.Log(gameObject.name);
+        }
+        else
+        {
+            StartCoroutine(BlockedCursor());
+        }
+    }
 
     }
+
+    IEnumerator BlockedCursor()
+    {
+        Cursor.SetCursor(cursorBlock, hotSpot, cursorMode);
+
+        yield return new WaitForSeconds(1);
+        
+        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+    }
+
 
     private void onDisable()
     {
