@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
- 
+
 public class CameraController : MonoBehaviour {
     [Header("Speed Controls")]
     [SerializeField] private float movementSpeed = 2f;
@@ -28,8 +28,7 @@ public class CameraController : MonoBehaviour {
         inputActions.Enable();
     }
 
-    private void onDisable()
-    {
+    private void onDisable() {
         inputActions.Disable();
     }
 }
