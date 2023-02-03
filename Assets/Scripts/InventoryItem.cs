@@ -3,26 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IInventoryItem
-{
-    
-        string Name { get; }
+public interface IInventoryItem {
 
-        Sprite Image { get; }
+    string Name { get; }
 
-        void OnPickup();
+    Sprite Image { get; }
 
-        void OnDrop();
+    void OnPickup();
+
+    void OnDrop();
 }
 
-    public class InventoryEventArgs : EventArgs
-    {
-        public InventoryEventArgs(IInventoryItem item)
-        {
-            Item = item; 
-        }
-
-        public IInventoryItem Item;
+public class InventoryEventArgs : EventArgs {
+    public InventoryEventArgs(IInventoryItem item) {
+        Item = item;
     }
-  
+
+    public IInventoryItem Item;
+}
+
 

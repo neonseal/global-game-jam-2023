@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeComponent : MonoBehaviour
+public class TreeComponent : MonoBehaviour, IOrganicComponent
 {
-    private OrganicComponent organicComponent;
     private ResourceGenerator resourceGenerator;
+    private IOrganicComponent organicComponent;
 
     [Header("Health/Maintenance")]
     [SerializeField] private float maintenanceCost = 10f;
@@ -16,7 +16,7 @@ public class TreeComponent : MonoBehaviour
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
-        organicComponent = new OrganicComponent(maintenanceCost, energyBuildCost, waterBuildCost, organicBuildCost, maxHealth);
+        organicComponent =  OrganicComponentEventArgs(maintenanceCost, energyBuildCost, waterBuildCost, organicBuildCost, maxHealth);
     }
 
     void Update()

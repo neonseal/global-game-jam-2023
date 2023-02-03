@@ -28,7 +28,10 @@ public class ForestController : MonoBehaviour {
     private void Awake() {
         timer = timerResetValue;
 
+        // Initialize Forest Component Collecitons
         treeSupply = new TreeComponent[0];
+
+        // Set up Resource State Traacker
         activeSystems = new List<string>();
         activeSystems.Add("Water");
         activeSystems.Add("Energy");

@@ -13,8 +13,6 @@ public class ResourceGenerator : MonoBehaviour
     // Determines if component is in a valid state and able to generate
     private bool componentIsEnabled = true;
 
-    private float timer = 0.0f;
-
     public float CycleTime {
         get { return cycleTime; }
         set { cycleTime = value; }
