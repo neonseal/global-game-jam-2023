@@ -988,6 +988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &434053070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1383,6 +1384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &684021544
 GameObject:
   m_ObjectHideFlags: 0
@@ -1515,6 +1517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1599,6 +1602,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &867232721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2338,6 +2361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &1269240040
 GameObject:
   m_ObjectHideFlags: 0
@@ -2427,6 +2451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &1306830811
 GameObject:
   m_ObjectHideFlags: 0
@@ -2459,43 +2484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b524948c60fa61643b8c61ac9e6cfc55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Panel1: {fileID: 0}
-  Image1: {fileID: 543260492}
-  Image2: {fileID: 1682259822}
-  Image3: {fileID: 2061180142}
-  color1:
-    r: 0.027738184
-    g: 0.5188679
-    b: 0.11819142
-    a: 1
-  color2:
-    r: 0.7830189
-    g: 0.7615159
-    b: 0
-    a: 1
-  color3:
-    r: 1
-    g: 0.48561752
-    b: 0.044025064
-    a: 1
-  color4:
-    r: 0.6698113
-    g: 0.015555152
-    b: 0
-    a: 0
-  color5:
-    r: 0
-    g: 0.34866476
-    b: 1
-    a: 1
-  color6:
-    r: 0.754717
-    g: 0.14714602
-    b: 0.14714602
-    a: 1
-  Gen1: 0
-  Gen2: 0
-  Gen3: 0
 --- !u!114 &1306830813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2866,6 +2854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &1483889390
 GameObject:
   m_ObjectHideFlags: 0
@@ -3591,6 +3580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &1934140082
 GameObject:
   m_ObjectHideFlags: 0
@@ -3680,6 +3670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &1981183230
 GameObject:
   m_ObjectHideFlags: 0
@@ -3804,7 +3795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cd5bcc31aeea5946b5135b04f642ec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Inventory: {fileID: 0}
+  cursorManager: {fileID: 0}
 --- !u!1 &2024549359
 GameObject:
   m_ObjectHideFlags: 0
@@ -3894,6 +3885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135740d9c0b008245b3fa6d35477d8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryItems: []
 --- !u!1 &2035416986
 GameObject:
   m_ObjectHideFlags: 0
