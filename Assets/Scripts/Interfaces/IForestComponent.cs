@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public interface IOrganicComponent {
+public interface IForestComponent {
     float maintenanceCost { get; set; }
     float energyBuildCost { get; set; }
     float waterBuildCost { get; set; }
@@ -18,6 +18,11 @@ public interface IOrganicComponent {
 
     public void AddHealth(float amount) {
         health += amount;
+    }
+
+    // Calculate cost to sustain this tree based on its current health
+    public float CalculateMaintenanceCost() {
+        return maintenanceCost * (health / 100);
     }
 }
 
