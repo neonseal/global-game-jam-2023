@@ -4843,6 +4843,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf54bb98825aca41b5948f5da69b895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyConsumptionRate: 20
+  waterConsumptionRate: 20
+  organicConsumptionRate: 20
 --- !u!1001 &1119335898
 PrefabInstance:
   m_ObjectHideFlags: 0
