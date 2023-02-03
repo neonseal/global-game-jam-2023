@@ -21,14 +21,4 @@ public interface IOrganicComponent {
     }
 }
 
-public class OrganicComponentEventArgs : EventArgs {
-    public IOrganicComponent OrganicComponent;
-    public OrganicComponentEventArgs(float maint, float energy, float water, float organic, float hp) {
-        OrganicComponent.maintenanceCost = maint;
-        OrganicComponent.energyBuildCost = energy;
-        OrganicComponent.waterBuildCost = water;
-        OrganicComponent.organicBuildCost = organic;
-        OrganicComponent.health = OrganicComponent.maxHealth = hp;
-    }
-}
 
