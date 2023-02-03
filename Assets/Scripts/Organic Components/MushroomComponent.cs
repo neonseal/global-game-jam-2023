@@ -21,7 +21,7 @@ public class MushroomComponent : MonoBehaviour, IForestComponent {
         resourceGenerator.AmountPerCycle = resourceGenerator.BaseAmountPerCycle * (health / 100);
     }
 
-    private float GetCurrentGenerationRate() {
+    public float GetCurrentGenerationRate() {
         return resourceGenerator.AmountPerCycle;
     }
 }

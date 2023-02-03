@@ -5173,10 +5173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b081524beff78b943b3f2f75214f3a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeCount: 2
-  sunflowerCount: 1
-  decomposerCount: 1
-  mushroomCount: 7
   totalWater: 100
   totalEnergy: 100
   totalOrganic: 100

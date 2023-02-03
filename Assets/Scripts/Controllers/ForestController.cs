@@ -4,19 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ForestController : MonoBehaviour {
-    [Header("Component Counts")]
-    [SerializeField] private int treeCount = 2;
-    [SerializeField] private int sunflowerCount = 1;
-    [SerializeField] private int decomposerCount = 1;
-    [SerializeField] private int mushroomCount = 7;
-
-    [Header("Forest Component Collections")]
-    private TreeComponent[] treeSupply;
 
     [Header("Total Resource Counts")]
     [SerializeField] private float totalWater = 100.0f;
     [SerializeField] private float totalEnergy = 100.0f;
     [SerializeField] private float totalOrganic = 100.0f;
+
+    [Header("Forest Component Collections")]
+    private TreeComponent[] treeSupply;
+    private SunflowerComponent[] sunflowerSupply;
+    private DecomposerComponent[] decomposerSupply;
+    private MushroomComponent[] mushroomSupply;
 
     [Header("Timer")]
     private float timer;
@@ -30,6 +28,9 @@ public class ForestController : MonoBehaviour {
 
         // Initialize Forest Component Collecitons
         treeSupply = new TreeComponent[0];
+        sunflowerSupply = new SunflowerComponent[0];
+        decomposerSupply = new DecomposerComponent[0];
+        mushroomSupply = new MushroomComponent[0];
 
         // Set up Resource State Traacker
         activeSystems = new List<string>();
@@ -39,8 +40,6 @@ public class ForestController : MonoBehaviour {
     }
 
     private void Update() {
-        // Update current resource generation 
-
         timer -= Time.fixedDeltaTime;
 
         if (timer <= 0.0f) {
@@ -56,26 +55,16 @@ public class ForestController : MonoBehaviour {
     }
 
     private void ApplyForestResourceGeneration() {
-        // Capture current totalValue;
-        // Iterate through each collection of organic components
-        // Call GetCurrentGenerationRate function
-        // Total generation rate and add to total
-        // If previous total was zero, trigger generator state change 
-
         HandleWaterResourceGeneration();
         HandleEneryResourceGeneration();
         HandleOrganicResourceGeneration();
     }
 
     private void ApplyForestMaintenanceCost() {
-        // Iterate through each collection of organic components
-        // Call CalculateMaintenanceCost function 
         // Calculate total cost to maintain forest
-        // Substract from each total
-        // Check if each total == 0, trigger generator state change
-        float treeCost = 3 * treeCount;
-        float sunflowerCost = 2 * sunflowerCount;
-        float decomposerCost = 1 * decomposerCount;
+        float treeCost = treeSupply.Length > 0 ? treeSupply.Length * treeSupply[0].maintenanceCost : 0;
+        float sunflowerCost = sunflowerSupply.Length > 0 ? sunflowerSupply.Length * sunflowerSupply[0].maintenanceCost : 0;
+        float decomposerCost = decomposerSupply.Length > 0 ? decomposerSupply.Length * decomposerSupply[0].maintenanceCost : 0;
 
         HandleWaterResourceConsumption(sunflowerCost, decomposerCost);
         HandleEnergyResourceConsumption(treeCost, decomposerCost);
@@ -87,7 +76,13 @@ public class ForestController : MonoBehaviour {
         // Capture current value to check for state change
         float lastTotalValue = totalWater;
         // Calculate total resource resource generation power
-        totalWater += 3 * treeCount;
+        float waterGenerationRate = 0.0f;
+
+        foreach (TreeComponent tree in treeSupply) {
+            waterGenerationRate += tree.GetCurrentGenerationRate();
+        }
+
+        totalWater += waterGenerationRate;
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0) {
@@ -96,9 +91,15 @@ public class ForestController : MonoBehaviour {
     }
     private void HandleEneryResourceGeneration() {
         // Capture current value to check for state change
-        float lastTotalValue = totalWater;
+        float lastTotalValue = totalEnergy;
         // Calculate total resource resource generation power
-        totalWater += 2 * sunflowerCount;
+        float energyGenerationRate = 0.0f;
+
+        foreach (SunflowerComponent sunflower in sunflowerSupply) {
+            energyGenerationRate += sunflower.GetCurrentGenerationRate();
+        }
+
+        totalEnergy += energyGenerationRate;
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0) {
@@ -107,9 +108,15 @@ public class ForestController : MonoBehaviour {
     }
     private void HandleOrganicResourceGeneration() {
         // Capture current value to check for state change
-        float lastTotalValue = totalWater;
+        float lastTotalValue = totalOrganic;
         // Calculate total resource generation power
-        totalWater += decomposerCount;
+        float organicGenerationRate = 0.0f;
+
+        foreach (DecomposerComponent decomposer in decomposerSupply) {
+            organicGenerationRate += decomposer.GetCurrentGenerationRate();
+        }
+
+        totalOrganic += organicGenerationRate;
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0) {
@@ -148,9 +155,17 @@ public class ForestController : MonoBehaviour {
             DeactivateResourceState("Organic");
         }
     }
+
+    private float AttemptDecrement(float target, float decrement) {
+        if (target - decrement < 0) {
+            return 0;
+        }
+
+        return target -= decrement;
+    }
     #endregion
 
-    #region Activate/Deactivate Resource States
+    #region Resource State Manager
     private void ActivateResourceState(string resource) {
         if (!activeSystems.Contains(resource)) {
             activeSystems.Add(resource);
@@ -164,19 +179,9 @@ public class ForestController : MonoBehaviour {
         }
         // Trigger Generator To Decrease State
     }
-    #endregion
-
-
-
-    private float AttemptDecrement(float target, float decrement) {
-        if (target - decrement < 0) {
-            return 0;
-        }
-
-        return target -= decrement;
-    }
 
     private void TriggerGeneratorKillMode() {
         Debug.Log("GENERATOR IS EATING!");
     }
+    #endregion
 }
