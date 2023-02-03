@@ -30,7 +30,7 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
         if (inventoryItems.Length > 1) {
             selectedItemIndex = Random.Range(0, inventoryItems.Length - 1);
         }
-        Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + 2, tilePosition.z);
+        Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + 1, tilePosition.z);
         Debug.Log(itemPosition);
         Transform parentTransform = GameObject.FindGameObjectWithTag("ComponentLayer").transform;
         Quaternion rotation = Quaternion.LookRotation(-Camera.main.transform.forward);
