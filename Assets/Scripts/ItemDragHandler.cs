@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public IInventoryItem Item { get; set; }
+    [SerializeField] public GameObject[] inventoryItems;
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -16,17 +16,5 @@ public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler
     public void OnEndDrag(PointerEventData eventData)
     {
         transform.localPosition = Vector3.zero;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

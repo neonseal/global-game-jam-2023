@@ -14,31 +14,40 @@ public class CursorManager : MonoBehaviour {
     private Vector2 hotSpot;
 
     private CursorMode cursorMode = CursorMode.Auto;
+    private Vector3 cursorDropPosition;
+    private Vector3 cursorClickPosition;
 
     void Start() {
         //Start generating energy.
         EventManager.UpdateEvent += CursorFunction;
     }
 
+    public GameObject CalculateRayCastHitGameObject() {
+        RaycastHit raycastHit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out raycastHit)) {
+            if (raycastHit.transform != null) {
+                //Our custom method. 
+                return raycastHit.transform.gameObject;
+            }
+        }
 
-    // Update is called once per frame
-    void CursorFunction() {
-        //Check for mouse click 
-        if (Input.GetMouseButtonDown(0)) {
-            RaycastHit raycastHit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out raycastHit)) {
-                if (raycastHit.transform != null) {
-                    //Our custom method. 
-                    CurrentClickedGameObject(raycastHit.transform.gameObject);
-                }
+        return null;
+    }
+
+    private void CursorFunction() {
+        // Check for mouse click release
+        if (Input.GetMouseButtonUp(0)) {
+            GameObject hitObject = CalculateRayCastHitGameObject();
+            if (hitObject != null) {
+                CurrentClickedGameObject(hitObject);
             }
         }
     }
 
-    void CurrentClickedGameObject(GameObject gameObject) {
+    private void CurrentClickedGameObject(GameObject gameObject) {
         if (gameObject.tag == "Interactable") {
-            Debug.Log(gameObject.transform.position);
+            cursorDropPosition = gameObject.transform.position;
         } else {
             StartCoroutine(BlockedCursor());
         }
@@ -52,6 +61,9 @@ public class CursorManager : MonoBehaviour {
         Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
     }
 
+    public Vector3 CursorDropPosition {
+        get { return cursorDropPosition; }
+    }
 
     private void onDisable() {
         EventManager.UpdateEvent -= CursorFunction;
