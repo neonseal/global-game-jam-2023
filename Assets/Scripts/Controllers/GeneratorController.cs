@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class GeneratorController : MonoBehaviour {
     // Use global resource manager to track resource generation/input
-    private ForestManager forestManager;
+    private ForestController forestManager;
 
     private void Awake() {
-        forestManager = new ForestManager();
+        forestManager = new ForestController();
     }
 
     private void Update() {

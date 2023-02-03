@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForestManager : MonoBehaviour {
+public class ForestController : MonoBehaviour {
     [Header("Component Counts")]
     [SerializeField] private int treeCount = 2;
     [SerializeField] private int sunflowerCount = 1;
@@ -64,6 +64,22 @@ public class ForestManager : MonoBehaviour {
         HandleOrganicResourceGeneration();
     }
 
+    private void ApplyForestMaintenanceCost() {
+        // Iterate through each collection of organic components
+        // Call CalculateMaintenanceCost function 
+        // Calculate total cost to maintain forest
+        // Substract from each total
+        // Check if each total == 0, trigger generator state change
+        float treeCost = 3 * treeCount;
+        float sunflowerCost = 2 * sunflowerCount;
+        float decomposerCost = 1 * decomposerCount;
+
+        HandleWaterResourceConsumption(sunflowerCost, decomposerCost);
+        HandleEnergyResourceConsumption(treeCost, decomposerCost);
+        HandleOrganicResourceConsumption(treeCost, sunflowerCost);
+    }
+
+    #region Handle Resource Generation
     private void HandleWaterResourceGeneration() {
         // Capture current value to check for state change
         float lastTotalValue = totalWater;
@@ -97,7 +113,41 @@ public class ForestManager : MonoBehaviour {
             ActivateResourceState("Organic");
         }
     }
+    #endregion
 
+    #region Handle Resource Consumption
+    private void HandleWaterResourceConsumption(float sunflowerCost, float decomposerCost) {
+        float lastTotalValue = totalWater;
+        totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
+
+        // Check if we were positive, and now hit  zero
+        if (lastTotalValue > 0 && totalWater == 0) {
+            DeactivateResourceState("Water");
+        }
+    }
+
+    private void HandleEnergyResourceConsumption(float treeCost, float decomposerCost) {
+        float lastTotalEnergy = totalEnergy;
+        totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
+
+        // Check if we were positive, and now hit  zero
+        if (lastTotalEnergy > 0 && totalEnergy == 0) {
+            DeactivateResourceState("Energy");
+        }
+    }
+
+    private void HandleOrganicResourceConsumption(float treeCost, float sunflowerCost) {
+        float lastTotalOrganic = totalOrganic;
+        totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
+
+        // Check if we were positive, and now hit  zero
+        if (lastTotalOrganic > 0 && totalOrganic == 0) {
+            DeactivateResourceState("Organic");
+        }
+    }
+    #endregion
+
+    #region Activate/Deactivate Resource States
     private void ActivateResourceState(string resource) {
         if (!activeSystems.Contains(resource)) {
             activeSystems.Add(resource);
@@ -111,25 +161,8 @@ public class ForestManager : MonoBehaviour {
         }
         // Trigger Generator To Decrease State
     }
+    #endregion
 
-    private void ApplyForestMaintenanceCost() {
-        // Iterate through each collection of organic components
-        // Call CalculateMaintenanceCost function 
-        // Calculate total cost to maintain forest
-        // Substract from each total
-        // Check if each total == 0, trigger generator state change
-        float treeCost = 3 * treeCount;
-        float sunflowerCost = 2 * sunflowerCount;
-        float decomposerCost = 1 * decomposerCount;
-
-        totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
-        totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
-        totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
-    }
-
-    private void HandleWaterResourceConsumption() {
-        float lastTotalValue = totalWater;
-    }
 
 
     private float AttemptDecrement(float target, float decrement) {
