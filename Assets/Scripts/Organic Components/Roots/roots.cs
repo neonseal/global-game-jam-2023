@@ -33,7 +33,7 @@ public class roots : MonoBehaviour
         {
             if(colliders[i].tag == "roots") 
             {
-                colliders[i].SendMessage("connectRoots", gameObject.name);
+                colliders[i].SendMessage("connectRoots", gameObject);
             }
         }
     }
