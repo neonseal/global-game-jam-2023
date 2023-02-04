@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 656722705128589502}
   m_Layer: 0
   m_Name: root_medium
-  m_TagString: Untagged
+  m_TagString: Decomposer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

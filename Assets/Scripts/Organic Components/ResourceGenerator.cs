@@ -8,7 +8,7 @@ public class ResourceGenerator : MonoBehaviour
     // The speed at which resource is generated.
     private float cycleTime = 1.0f;
     // Ammount of resource generated per cycle
-    private float baseAmountPerCycle = 10.0f;
+    [SerializeField] private float baseAmountPerCycle = 10.0f;
     private float amountPerCycle = 10.0f;
     // Determines if component is in a valid state and able to generate
     private bool componentIsEnabled = true;

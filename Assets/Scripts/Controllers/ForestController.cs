@@ -24,11 +24,23 @@ public class ForestController : MonoBehaviour {
     private float timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
-    [Header("Resource Tracking")]
-    [SerializeField] private List<string> activeSystems;
-    [SerializeField] private CounterHUD counterHUD;
+    [Header("Resource System Tuning")]
+    [SerializeField] private TreeComponent testTreeComponent;
+    [SerializeField] private MushroomComponent testMushroomComponent;
+    [SerializeField] private SunflowerComponent testSunflowerComponent;
+    [SerializeField] private DecomposerComponent testDecomposerComponent;
+
+
+    private CounterHUD counterHUD;
 
     private void Awake() {
+        // Variables for system tuning
+        testTreeComponent = new TreeComponent();
+        testSunflowerComponent = new SunflowerComponent();
+        testDecomposerComponent = new DecomposerComponent();
+        testMushroomComponent = new MushroomComponent();
+
+
         generator = new GeneratorController();
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
@@ -39,11 +51,6 @@ public class ForestController : MonoBehaviour {
         decomposerSupply = new List<DecomposerComponent>();
         mushroomSupply = new List<MushroomComponent>();
 
-        // Set up Resource State Traacker
-        activeSystems = new List<string>();
-        activeSystems.Add("Water");
-        activeSystems.Add("Energy");
-        activeSystems.Add("Organic");
     }
 
     private void Update() {
@@ -63,9 +70,11 @@ public class ForestController : MonoBehaviour {
 
     private void UpdateForestMaintenanceCosts() {
         // Calculate total cost to maintain forest
-        treeCost = treeSupply.Count > 0 ? treeSupply.Count * treeSupply[0].maintenanceCost : 0;
-        sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * sunflowerSupply[0].maintenanceCost : 0;
-        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0;
+        treeCost = treeSupply.Count > 0 ? treeSupply.Count * testTreeComponent.maintenanceCost : 0;
+            //treeSupply[0].maintenanceCost : 0;
+        sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * testSunflowerComponent.maintenanceCost : 0;
+        //sunflowerSupply[0].maintenanceCost : 0;
+        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * testDecomposerComponent.maintenanceCost : 0; //decomposerSupply[0].maintenanceCost : 0;
     }
 
     private void UpdateWaterResourceSupply() {
@@ -77,7 +86,7 @@ public class ForestController : MonoBehaviour {
 
         // Calculate total resource resource generation power
         foreach (TreeComponent tree in treeSupply) {
-            waterGenerationRate += tree.GetCurrentGenerationRate();
+            waterGenerationRate += testTreeComponent.GetCurrentGenerationRate();
         }
         totalWater += waterGenerationRate;
         
@@ -108,7 +117,7 @@ public class ForestController : MonoBehaviour {
 
         // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
-            energyGenerationRate += sunflower.GetCurrentGenerationRate();
+            energyGenerationRate += testSunflowerComponent.GetCurrentGenerationRate();
         }
         totalEnergy += energyGenerationRate;
 
@@ -139,7 +148,7 @@ public class ForestController : MonoBehaviour {
 
         // Calculate total resource resource generation power
         foreach (DecomposerComponent decomposer in decomposerSupply) {
-            organicGenerationRate += decomposer.GetCurrentGenerationRate();
+            organicGenerationRate += testDecomposerComponent.GetCurrentGenerationRate();
         }
         totalOrganic += organicGenerationRate;
 
@@ -184,20 +193,35 @@ public class ForestController : MonoBehaviour {
             case ComponentType.Tree:
                 TreeComponent treeComponent = newComponent.AddComponent(typeof(TreeComponent)) as TreeComponent;
                 treeSupply.Add(treeComponent);
-                Debug.Log(treeSupply.Count);
+
+                // Deduct build costs
+                totalEnergy -= testTreeComponent.energyBuildCost;
+                totalOrganic -= testTreeComponent.organicBuildCost;
                 break;
             case ComponentType.Sunflower:
                 SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
                 sunflowerSupply.Add(sunflowerComponent);
+
+                // Deduct build costs
+                totalOrganic -= testSunflowerComponent.organicBuildCost;
+                totalWater -= testSunflowerComponent.waterBuildCost;
                 break;
             case ComponentType.Mushroom:
                 MushroomComponent mushroomComponent = newComponent.AddComponent(typeof(MushroomComponent)) as MushroomComponent;
                 mushroomSupply.Add(mushroomComponent);
+
+                // Deduct build costs
+                totalEnergy -= testMushroomComponent.energyBuildCost;
+                totalWater -= testMushroomComponent.waterBuildCost;
+                totalOrganic -= testMushroomComponent.organicBuildCost;
                 break;
             case ComponentType.Decomposer:
                 DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
                 decomposerSupply.Add(decomposerComponent);
 
+                // Deduct build costs
+                totalEnergy -= testDecomposerComponent.energyBuildCost;
+                totalWater -=testDecomposerComponent.waterBuildCost;
                 break;
         }
     }

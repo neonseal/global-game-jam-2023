@@ -6,9 +6,9 @@ using ForestComponent;
 public class MushroomComponent : MonoBehaviour, IForestComponent {
     private ResourceGenerator resourceGenerator;
     [SerializeField] public float maintenanceCost { get; set; } = 10f;
-    [SerializeField] public float energyBuildCost { get; set; } = 0f;
-    [SerializeField] public float waterBuildCost { get; set; } = 0f;
-    [SerializeField] public float organicBuildCost { get; set; } = 0f;
+    [SerializeField] public float energyBuildCost { get; set; } = 2f;
+    [SerializeField] public float waterBuildCost { get; set; } = 2f;
+    [SerializeField] public float organicBuildCost { get; set; } = 2f;
     [SerializeField] public float maxHealth { get; set; } = 100;
     [SerializeField] public float health { get; set; }
 
