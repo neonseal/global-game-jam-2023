@@ -8,9 +8,10 @@ public class ForestController : MonoBehaviour {
     private GeneratorController generator;
 
     [Header("Total Resource Counts")]
-    [SerializeField] private float totalWater = 100.0f;
-    [SerializeField] private float totalEnergy = 100.0f;
-    [SerializeField] private float totalOrganic = 100.0f;
+    private static float defaultResourceAmount = 100.0f;
+    [SerializeField] private float totalWater = defaultResourceAmount;
+    [SerializeField] private float totalEnergy = defaultResourceAmount;
+    [SerializeField] private float totalOrganic = defaultResourceAmount;
 
     [Header("Forest Component Collections")]
     private static List<TreeComponent> treeSupply;
@@ -22,12 +23,14 @@ public class ForestController : MonoBehaviour {
     private float timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
-    [Header("Failing Resources")]
+    [Header("Resource Tracking")]
     [SerializeField] private List<string> activeSystems;
+    [SerializeField] private CounterHUD counterHUD;
 
     private void Awake() {
         generator = new GeneratorController();
-
+        //counterHUD = new CounterHUD(defaultResourceAmount, defaultResourceAmount, defaultResourceAmount);
+        counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
 
         // Initialize Forest Component Collecitons
@@ -53,6 +56,7 @@ public class ForestController : MonoBehaviour {
             ApplyForestResourceGeneration();
             ApplyForestMaintenanceCost();
             ApplyGeneratorConsumptionCost();
+            UpdateCounterHUD();
 
             if (totalWater == 0 && totalEnergy == 0 && totalOrganic == 0) {
                 TriggerGeneratorKillMode();
@@ -204,6 +208,12 @@ public class ForestController : MonoBehaviour {
 
     private void TriggerGeneratorKillMode() {
         Debug.Log("GENERATOR IS EATING!");
+    }
+
+    private void UpdateCounterHUD() {
+        counterHUD.energyCount = totalEnergy;
+        counterHUD.waterCount = totalWater;
+        counterHUD.organicCount = totalOrganic;
     }
     #endregion
 

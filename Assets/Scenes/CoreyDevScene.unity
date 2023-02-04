@@ -3689,6 +3689,7 @@ MonoBehaviour:
   totalOrganic: 100
   timerResetValue: 5
   activeSystems: []
+  counterHUD: {fileID: 843460970}
 --- !u!1001 &693849092
 PrefabInstance:
   m_ObjectHideFlags: 0
