@@ -71,24 +71,46 @@ public class ForestController : MonoBehaviour {
         // Calculate total cost to maintain forest
         treeCost = treeSupply.Count > 0 ? treeSupply.Count * treeSupply[0].maintenanceCost : 0;
         sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * sunflowerSupply[0].maintenanceCost : 0;
-        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0
+        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0;
     }
 
     private void UpdateWaterResourceSupply() {
+        // Capture current value to check for state change
+        float lastTotalValue = totalWater;
 
+        // Apply Resource Generation
+        float waterGenerationRate = 0.0f;
+
+        // Calculate total resource resource generation power
+        foreach (TreeComponent tree in treeSupply) {
+            waterGenerationRate += tree.GetCurrentGenerationRate();
+        }
+        totalWater += waterGenerationRate;
+
+        // Apply Forest Maintenance Costs
+        if (sunflowerCost > 0 || decomposerCost > 0) {
+            totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
+        }
+
+        // Apply Generation Consumption
+        totalWater = AttemptDecrement(totalWater, generator.WaterConsumptionRate);
+
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalWater <= 0) {
+            // Water now depleted
+            generator.UpdateResourceState(ComponentType.Tree, false);
+        } else if (lastTotalValue <= 0 && totalWater > 0) {
+            // Water Replenished
+            generator.UpdateResourceState(ComponentType.Tree, true);
+        }
     }
 
     private void ApplyForestResourceGeneration() {
-        HandleWaterResourceGeneration();
         HandleEneryResourceGeneration();
         HandleOrganicResourceGeneration();
     }
 
     private void ApplyForestMaintenanceCost() {
-        if (sunflowerCost > 0 || decomposerCost > 0) {
-            HandleWaterResourceConsumption((sunflowerCost + decomposerCost) / 2);
-        }
-
         if (treeCost > 0 || decomposerCost > 0) {
             HandleEnergyResourceConsumption((treeCost + decomposerCost) / 2);
         }
@@ -99,29 +121,11 @@ public class ForestController : MonoBehaviour {
     }
 
     private void ApplyGeneratorConsumptionCost() {
-        HandleWaterResourceConsumption(generator.EnergyConsumptionRate);
-        HandleEnergyResourceConsumption(generator.WaterConsumptionRate);
+        HandleEnergyResourceConsumption(generator.EnergyConsumptionRate);
         HandleOrganicResourceConsumption(generator.OrganicConsumptionRate);
     }
 
     #region Handle Resource Generation
-    private void HandleWaterResourceGeneration() {
-        // Capture current value to check for state change
-        float lastTotalValue = totalWater;
-        // Calculate total resource resource generation power
-        float waterGenerationRate = 0.0f;
-
-        foreach (TreeComponent tree in treeSupply) {
-            waterGenerationRate += tree.GetCurrentGenerationRate();
-        }
-
-        totalWater += waterGenerationRate;
-
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0 && totalWater > 0) {
-            SetResourceState("Water", true);
-        }
-    }
     private void HandleEneryResourceGeneration() {
         // Capture current value to check for state change
         float lastTotalValue = totalEnergy;
@@ -159,15 +163,6 @@ public class ForestController : MonoBehaviour {
     #endregion
 
     #region Handle Resource Consumption
-    private void HandleWaterResourceConsumption(float consumptionAmount) {
-        float lastTotalValue = totalWater;
-        totalWater = AttemptDecrement(totalWater, consumptionAmount);
-
-        // Check if we were positive, and now hit  zero
-        if (lastTotalValue > 0 && totalWater == 0) {
-            SetResourceState("Water", false);
-        }
-    }
 
     private void HandleEnergyResourceConsumption(float consumptionAmount) {
         float lastTotalEnergy = totalEnergy;
