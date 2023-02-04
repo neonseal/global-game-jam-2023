@@ -18,6 +18,7 @@ public class ForestController : MonoBehaviour {
     private static List<SunflowerComponent> sunflowerSupply;
     private static List<DecomposerComponent> decomposerSupply;
     private static List<MushroomComponent> mushroomSupply;
+    private float treeCost, sunflowerCost, decomposerCost = 0.0f;
 
     [Header("Timer")]
     private float timer;
@@ -46,16 +47,16 @@ public class ForestController : MonoBehaviour {
         activeSystems.Add("Organic");
     }
 
-    private void Start() {
-    }
-
     private void Update() {
         timer -= Time.fixedDeltaTime;
 
+        UpdateForestMaintenanceCosts();
+
         if (timer <= 0.0f) {
-            ApplyForestResourceGeneration();
-            ApplyForestMaintenanceCost();
-            ApplyGeneratorConsumptionCost();
+            UpdateWaterResourceSupply();
+            //ApplyForestResourceGeneration();
+            //ApplyForestMaintenanceCost();
+            //ApplyGeneratorConsumptionCost();
             UpdateCounterHUD();
 
             if (totalWater == 0 && totalEnergy == 0 && totalOrganic == 0) {
@@ -66,6 +67,17 @@ public class ForestController : MonoBehaviour {
         }
     }
 
+    private void UpdateForestMaintenanceCosts() {
+        // Calculate total cost to maintain forest
+        treeCost = treeSupply.Count > 0 ? treeSupply.Count * treeSupply[0].maintenanceCost : 0;
+        sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * sunflowerSupply[0].maintenanceCost : 0;
+        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0
+    }
+
+    private void UpdateWaterResourceSupply() {
+
+    }
+
     private void ApplyForestResourceGeneration() {
         HandleWaterResourceGeneration();
         HandleEneryResourceGeneration();
@@ -73,11 +85,6 @@ public class ForestController : MonoBehaviour {
     }
 
     private void ApplyForestMaintenanceCost() {
-        // Calculate total cost to maintain forest
-        float treeCost = treeSupply.Count > 0 ? treeSupply.Count * treeSupply[0].maintenanceCost : 0;
-        float sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * sunflowerSupply[0].maintenanceCost : 0;
-        float decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0;
-
         if (sunflowerCost > 0 || decomposerCost > 0) {
             HandleWaterResourceConsumption((sunflowerCost + decomposerCost) / 2);
         }

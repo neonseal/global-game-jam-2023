@@ -27,7 +27,7 @@ public class GeneratorController : MonoBehaviour {
 
     private void Update() {
         string[] failingResources = resourceStates.Where(kvp => kvp.Value == false).Select(kvp => kvp.Key) as string[];
-        Debug.Log(failingResources);
+        //Debug.Log(failingResources);
     }
 
     #region Resource State Management
@@ -35,15 +35,18 @@ public class GeneratorController : MonoBehaviour {
         switch(type) {
             case ComponentType.Tree:
                 resourceStates["Water"] = activeState;
-                generatorHUD.waterActive = activeState;
+                generatorHUD.SetResourceState(ComponentType.Tree, activeState);
+                Debug.Log("Setting Water State");
                 break;
             case ComponentType.Sunflower:
                 resourceStates["Energy"] = activeState;
-                generatorHUD.energyActive = activeState;
+                generatorHUD.SetResourceState(ComponentType.Sunflower, activeState);
+                Debug.Log("Setting Energy State");
                 break;
             case ComponentType.Decomposer:
                 resourceStates["Organic"] = activeState;
-                generatorHUD.organicActive = activeState;
+                generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
+                Debug.Log("Setting Organic State");
                 break;
         }
     }

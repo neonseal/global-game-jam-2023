@@ -3685,9 +3685,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b081524beff78b943b3f2f75214f3a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalWater: 100
-  totalEnergy: 100
-  totalOrganic: 100
+  totalWater: 300
+  totalEnergy: 300
+  totalOrganic: 300
   timerResetValue: 5
   activeSystems: []
   counterHUD: {fileID: 843460970}
@@ -14979,15 +14979,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b29344220464c2d43a9499f3df398a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Panel1: {fileID: 0}
-  waterStateImage: {fileID: 0}
-  energyStateImage: {fileID: 0}
-  organicStateImage: {fileID: 0}
-  activeColor: {r: 0, g: 0, b: 0, a: 0}
-  depletedColor: {r: 0, g: 0, b: 0, a: 0}
-  waterActive: 0
-  energyActive: 0
-  organicActive: 0
+  Panel1: {fileID: 18581079}
+  waterStateImage: {fileID: 1425447953}
+  energyStateImage: {fileID: 1436894237}
+  organicStateImage: {fileID: 778151233}
+  activeColor: {r: 0.116011046, g: 0.15925048, b: 0.745283, a: 0}
+  depletedColor: {r: 1, g: 0, b: 0, a: 0}
 --- !u!114 &2128711667
 MonoBehaviour:
   m_ObjectHideFlags: 0
