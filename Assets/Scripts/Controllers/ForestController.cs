@@ -30,7 +30,6 @@ public class ForestController : MonoBehaviour {
 
     private void Awake() {
         generator = new GeneratorController();
-        //counterHUD = new CounterHUD(defaultResourceAmount, defaultResourceAmount, defaultResourceAmount);
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
 
