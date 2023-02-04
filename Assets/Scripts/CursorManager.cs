@@ -19,7 +19,7 @@ public class CursorManager : MonoBehaviour {
 
     void Start() {
         //Start generating energy.
-        eventManagerScript.ExampleEvent += CursorFunction;
+        EventManager.UpdateEvent += CursorFunction;
     }
 
     public GameObject CalculateRayCastHitGameObject() {
@@ -66,6 +66,6 @@ public class CursorManager : MonoBehaviour {
     }
 
     private void onDisable() {
-        eventManagerScript.ExampleEvent -= CursorFunction;
+        EventManager.UpdateEvent -= CursorFunction;
     }
 }
