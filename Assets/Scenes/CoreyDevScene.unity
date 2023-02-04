@@ -953,7 +953,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 200740361}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &200740360
 GameObject:
@@ -984,10 +984,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 690022203}
-  - {fileID: 1365157430}
+  - {fileID: 859480294}
   - {fileID: 1872047737}
-  - {fileID: 1315514149}
   - {fileID: 199823143}
+  - {fileID: 1365157430}
+  - {fileID: 1315514149}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4341,7 +4342,7 @@ GameObject:
   - component: {fileID: 778151234}
   - component: {fileID: 778151233}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: OrganicState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5331,6 +5332,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1282045509729116786, guid: 8f67e13444ededf4699c24f14bba455b, type: 3}
   m_PrefabInstance: {fileID: 852202870}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &859480293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 859480294}
+  - component: {fileID: 859480295}
+  m_Layer: 0
+  m_Name: GeneratorController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &859480294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859480293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 200740361}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &859480295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859480293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf54bb98825aca41b5948f5da69b895, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generatorHUD: {fileID: 2128711666}
+  energyConsumptionRate: 20
+  waterConsumptionRate: 20
+  organicConsumptionRate: 20
 --- !u!1001 &865757888
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8736,7 +8785,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 200740361}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1317738267 stripped
 GameObject:
@@ -9147,7 +9196,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 200740361}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1365157431
 AudioSource:
@@ -9627,7 +9676,7 @@ GameObject:
   - component: {fileID: 1425447954}
   - component: {fileID: 1425447953}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: WaterState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9726,7 +9775,7 @@ GameObject:
   - component: {fileID: 1436894238}
   - component: {fileID: 1436894237}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: EnergyState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14931,18 +14980,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel1: {fileID: 0}
-  Image1: {fileID: 0}
-  Image2: {fileID: 0}
-  Image3: {fileID: 0}
-  color1: {r: 0, g: 0, b: 0, a: 0}
-  color2: {r: 0, g: 0, b: 0, a: 0}
-  color3: {r: 0, g: 0, b: 0, a: 0}
-  color4: {r: 0, g: 0, b: 0, a: 0}
-  color5: {r: 0, g: 0, b: 0, a: 0}
-  color6: {r: 0, g: 0, b: 0, a: 0}
-  Gen1: 0
-  Gen2: 0
-  Gen3: 0
+  waterStateImage: {fileID: 0}
+  energyStateImage: {fileID: 0}
+  organicStateImage: {fileID: 0}
+  activeColor: {r: 0, g: 0, b: 0, a: 0}
+  depletedColor: {r: 0, g: 0, b: 0, a: 0}
+  waterActive: 0
+  energyActive: 0
+  organicActive: 0
 --- !u!114 &2128711667
 MonoBehaviour:
   m_ObjectHideFlags: 0
