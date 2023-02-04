@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CounterHUD : MonoBehaviour {
-    public TextMeshProUGUI energyText, waterText, organicText;
+    [SerializeField] private TextMeshProUGUI waterText, energyText, organicText;
     public float energyCount { get; set; }
     public float waterCount { get; set; }
     public float organicCount { get; set; }

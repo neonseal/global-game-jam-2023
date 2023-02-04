@@ -20,8 +20,8 @@ public class GeneratorHUD : MonoBehaviour
 
     private void Update() {
         waterStateImage.color = waterActive ? activeColor : depletedColor;
-        //energyStateImage.color = energyActive ? activeColor : depletedColor;
-        //organicStateImage.color = organicActive ? activeColor : depletedColor;
+        energyStateImage.color = energyActive ? activeColor : depletedColor;
+        organicStateImage.color = organicActive ? activeColor : depletedColor;
     }
 
     public void SetResourceState(ComponentType type, bool activeState) {

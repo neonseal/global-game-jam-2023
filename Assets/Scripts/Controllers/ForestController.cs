@@ -54,14 +54,9 @@ public class ForestController : MonoBehaviour {
 
         if (timer <= 0.0f) {
             UpdateWaterResourceSupply();
-            //ApplyForestResourceGeneration();
-            //ApplyForestMaintenanceCost();
-            //ApplyGeneratorConsumptionCost();
+            UpdateEnergyResourceSupply();
+            UpdateOrganicResourceSupply();
             UpdateCounterHUD();
-
-            if (totalWater == 0 && totalEnergy == 0 && totalOrganic == 0) {
-                TriggerGeneratorKillMode();
-            }
 
             timer = timerResetValue;
         }
@@ -105,82 +100,65 @@ public class ForestController : MonoBehaviour {
         }
     }
 
-    private void ApplyForestResourceGeneration() {
-        HandleEneryResourceGeneration();
-        HandleOrganicResourceGeneration();
-    }
-
-    private void ApplyForestMaintenanceCost() {
-        if (treeCost > 0 || decomposerCost > 0) {
-            HandleEnergyResourceConsumption((treeCost + decomposerCost) / 2);
-        }
-
-        if (treeCost > 0 || sunflowerCost > 0) {
-            HandleOrganicResourceConsumption((treeCost + sunflowerCost) / 2);
-        }
-    }
-
-    private void ApplyGeneratorConsumptionCost() {
-        HandleEnergyResourceConsumption(generator.EnergyConsumptionRate);
-        HandleOrganicResourceConsumption(generator.OrganicConsumptionRate);
-    }
-
-    #region Handle Resource Generation
-    private void HandleEneryResourceGeneration() {
+    private void UpdateEnergyResourceSupply() {
         // Capture current value to check for state change
         float lastTotalValue = totalEnergy;
-        // Calculate total resource resource generation power
+
+        // Apply Resource Generation
         float energyGenerationRate = 0.0f;
 
+        // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
             energyGenerationRate += sunflower.GetCurrentGenerationRate();
         }
-
         totalEnergy += energyGenerationRate;
 
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0 && totalEnergy > 0) {
-            SetResourceState("Energy", true);
+        // Apply Forest Maintenance Costs
+        if (treeCost > 0 || decomposerCost > 0) {
+            totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
+        }
+
+        // Apply Generation Consumption
+        totalEnergy = AttemptDecrement(totalEnergy, generator.EnergyConsumptionRate);
+
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalEnergy <= 0) {
+            // Energy now depleted
+            generator.UpdateResourceState(ComponentType.Sunflower, false);
+        } else if (lastTotalValue <= 0 && totalEnergy > 0) {
+            // Energy Replenished
+            generator.UpdateResourceState(ComponentType.Sunflower, true);
         }
     }
-    private void HandleOrganicResourceGeneration() {
+
+    private void UpdateOrganicResourceSupply() {
         // Capture current value to check for state change
         float lastTotalValue = totalOrganic;
-        // Calculate total resource generation power
+
+        // Apply Resource Generation
         float organicGenerationRate = 0.0f;
 
+        // Calculate total resource resource generation power
         foreach (DecomposerComponent decomposer in decomposerSupply) {
             organicGenerationRate += decomposer.GetCurrentGenerationRate();
         }
-
         totalOrganic += organicGenerationRate;
 
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0 && totalOrganic > 0) {
-            SetResourceState("Organic", true);
+        // Apply Forest Maintenance Costs
+        if (treeCost > 0 || sunflowerCost > 0) {
+            totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
         }
-    }
-    #endregion
 
-    #region Handle Resource Consumption
+        // Apply Generation Consumption
+        totalOrganic = AttemptDecrement(totalOrganic, generator.OrganicConsumptionRate);
 
-    private void HandleEnergyResourceConsumption(float consumptionAmount) {
-        float lastTotalEnergy = totalEnergy;
-        totalEnergy = AttemptDecrement(totalEnergy, consumptionAmount);
-
-        // Check if we were positive, and now hit  zero
-        if (lastTotalEnergy > 0 && totalEnergy == 0) {
-            SetResourceState("Energy", false);
-        }
-    }
-
-    private void HandleOrganicResourceConsumption(float consumptionAmount) {
-        float lastTotalOrganic = totalOrganic;
-        totalOrganic = AttemptDecrement(totalOrganic, consumptionAmount);
-
-        // Check if we were positive, and now hit  zero
-        if (lastTotalOrganic > 0 && totalOrganic == 0) {
-            SetResourceState("Organic", false);
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalOrganic <= 0) {
+            // Energy now depleted
+            generator.UpdateResourceState(ComponentType.Decomposer, false);
+        } else if (lastTotalValue <= 0 && totalOrganic > 0) {
+            // Energy Replenished
+            generator.UpdateResourceState(ComponentType.Decomposer, true);
         }
     }
 
@@ -191,36 +169,8 @@ public class ForestController : MonoBehaviour {
 
         return target -= decrement;
     }
-    #endregion
 
     #region Resource State Manager
-    private void SetResourceState(string resource, bool activeState) {
-        if (activeState) {
-            if (!activeSystems.Contains(resource)) {
-                activeSystems.Add(resource);
-            }
-        } else {
-            if (activeSystems.Contains(resource)) {
-                activeSystems.Remove(resource);
-            }
-        }
-        // Trigger Generator To Change State
-        switch (resource) {
-            case "Tree":
-                generator.UpdateResourceState(ComponentType.Tree, activeState);
-                break;
-            case "Sunflower":
-                generator.UpdateResourceState(ComponentType.Sunflower, activeState);
-                break;
-            case "Decomposer":
-                generator.UpdateResourceState(ComponentType.Decomposer, activeState);
-                break;
-        }
-    }
-
-    private void TriggerGeneratorKillMode() {
-        Debug.Log("GENERATOR IS EATING!");
-    }
 
     private void UpdateCounterHUD() {
         counterHUD.energyCount = totalEnergy;

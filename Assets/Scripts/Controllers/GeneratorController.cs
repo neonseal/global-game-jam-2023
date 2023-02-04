@@ -5,7 +5,7 @@ using UnityEngine;
 using ForestComponent;
 
 public class GeneratorController : MonoBehaviour {
-    [SerializeField] private GeneratorHUD generatorHUD;
+    private static GeneratorHUD generatorHUD;
 
     [SerializeField] private float energyConsumptionRate = 20f;
     [SerializeField] private float waterConsumptionRate = 20f;
@@ -13,40 +13,33 @@ public class GeneratorController : MonoBehaviour {
 
     [Header("Resource States")]
     // Dictionary <ResourceName, Active>
-    private Dictionary<string, bool> resourceStates;
+    private static bool[] resourceStates;
 
 
     private void Awake() {
-        generatorHUD = new GeneratorHUD();
-
-        resourceStates = new Dictionary<string, bool>();
-        resourceStates.Add("Water", true);
-        resourceStates.Add("Energy", true);
-        resourceStates.Add("Organic", true);
+        generatorHUD = gameObject.GetComponent<GeneratorHUD>();
+        // Set initial resource states for Water, Energy, Organic
+        resourceStates = new bool[3] { true, true, true };
     }
 
     private void Update() {
-        string[] failingResources = resourceStates.Where(kvp => kvp.Value == false).Select(kvp => kvp.Key) as string[];
-        //Debug.Log(failingResources);
+        int failingCount = resourceStates.Count(state => state == false);
     }
 
     #region Resource State Management
     public void UpdateResourceState(ComponentType type, bool activeState) {
         switch(type) {
             case ComponentType.Tree:
-                resourceStates["Water"] = activeState;
+                resourceStates[0] = activeState;
                 generatorHUD.SetResourceState(ComponentType.Tree, activeState);
-                Debug.Log("Setting Water State");
                 break;
             case ComponentType.Sunflower:
-                resourceStates["Energy"] = activeState;
+                resourceStates[1] = activeState;
                 generatorHUD.SetResourceState(ComponentType.Sunflower, activeState);
-                Debug.Log("Setting Energy State");
                 break;
             case ComponentType.Decomposer:
-                resourceStates["Organic"] = activeState;
+                resourceStates[2] = activeState;
                 generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
-                Debug.Log("Setting Organic State");
                 break;
         }
     }
