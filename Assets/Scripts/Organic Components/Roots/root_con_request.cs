@@ -25,5 +25,10 @@ public class root_con_request : MonoBehaviour
     private void share_resources(connectorObject)
     {
         //connectorObject.sendMessage("want nutrients?") ("have nutrients?")
+        if(currentConnections > 0 )
+        {
+            currentConnections = currentConnections;
+        }
+        
     }
 }
