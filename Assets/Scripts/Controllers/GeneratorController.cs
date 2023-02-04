@@ -14,9 +14,6 @@ public class GeneratorController : MonoBehaviour {
     [Header("Resource States")]
     // Dictionary <ResourceName, Active>
     private Dictionary<string, bool> resourceStates;
-    private IGeneratorResourceState waterStateController;
-    private IGeneratorResourceState energyStateController;
-    private IGeneratorResourceState organicStateController;
 
 
     private void Awake() {
@@ -26,8 +23,6 @@ public class GeneratorController : MonoBehaviour {
         resourceStates.Add("Water", true);
         resourceStates.Add("Energy", true);
         resourceStates.Add("Organic", true);
-
-        waterStateController.depleted = energyStateController.depleted = organicStateController.depleted = false;
     }
 
     private void Update() {
@@ -36,19 +31,19 @@ public class GeneratorController : MonoBehaviour {
     }
 
     #region Resource State Management
-    private void UpdateResourceState(ComponentType type, bool active) {
+    public void UpdateResourceState(ComponentType type, bool activeState) {
         switch(type) {
             case ComponentType.Tree:
-                resourceStates["Water"] = active;
-                generatorHUD.waterActive = active;
+                resourceStates["Water"] = activeState;
+                generatorHUD.waterActive = activeState;
                 break;
             case ComponentType.Sunflower:
-                resourceStates["Energy"] = active;
-                generatorHUD.energyActive = active;
+                resourceStates["Energy"] = activeState;
+                generatorHUD.energyActive = activeState;
                 break;
             case ComponentType.Decomposer:
-                resourceStates["Organic"] = active;
-                generatorHUD.organicActive = active;
+                resourceStates["Organic"] = activeState;
+                generatorHUD.organicActive = activeState;
                 break;
         }
     }

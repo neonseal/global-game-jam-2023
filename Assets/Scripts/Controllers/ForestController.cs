@@ -82,13 +82,13 @@ public class ForestController : MonoBehaviour {
             HandleWaterResourceConsumption((sunflowerCost + decomposerCost) / 2);
         }
 
-         if (treeCost > 0 || decomposerCost > 0) {
-             HandleEnergyResourceConsumption((treeCost + decomposerCost) / 2);
-         }
+        if (treeCost > 0 || decomposerCost > 0) {
+            HandleEnergyResourceConsumption((treeCost + decomposerCost) / 2);
+        }
 
-         if (treeCost > 0 || sunflowerCost > 0) {
-             HandleOrganicResourceConsumption((treeCost + sunflowerCost) / 2);
-         }
+        if (treeCost > 0 || sunflowerCost > 0) {
+            HandleOrganicResourceConsumption((treeCost + sunflowerCost) / 2);
+        }
     }
 
     private void ApplyGeneratorConsumptionCost() {
@@ -112,7 +112,7 @@ public class ForestController : MonoBehaviour {
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0 && totalWater > 0) {
-            ActivateResourceState("Water");
+            SetResourceState("Water", true);
         }
     }
     private void HandleEneryResourceGeneration() {
@@ -129,7 +129,7 @@ public class ForestController : MonoBehaviour {
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0 && totalEnergy > 0) {
-            ActivateResourceState("Energy");
+            SetResourceState("Energy", true);
         }
     }
     private void HandleOrganicResourceGeneration() {
@@ -146,7 +146,7 @@ public class ForestController : MonoBehaviour {
 
         // If we have most into the positive, remove resource from the failing states
         if (lastTotalValue == 0 && totalOrganic > 0) {
-            ActivateResourceState("Organic");
+            SetResourceState("Organic", true);
         }
     }
     #endregion
@@ -158,7 +158,7 @@ public class ForestController : MonoBehaviour {
 
         // Check if we were positive, and now hit  zero
         if (lastTotalValue > 0 && totalWater == 0) {
-            DeactivateResourceState("Water");
+            SetResourceState("Water", false);
         }
     }
 
@@ -168,7 +168,7 @@ public class ForestController : MonoBehaviour {
 
         // Check if we were positive, and now hit  zero
         if (lastTotalEnergy > 0 && totalEnergy == 0) {
-            DeactivateResourceState("Energy");
+            SetResourceState("Energy", false);
         }
     }
 
@@ -178,7 +178,7 @@ public class ForestController : MonoBehaviour {
 
         // Check if we were positive, and now hit  zero
         if (lastTotalOrganic > 0 && totalOrganic == 0) {
-            DeactivateResourceState("Organic");
+            SetResourceState("Organic", false);
         }
     }
 
@@ -192,18 +192,28 @@ public class ForestController : MonoBehaviour {
     #endregion
 
     #region Resource State Manager
-    private void ActivateResourceState(string resource) {
-        if (!activeSystems.Contains(resource)) {
-            activeSystems.Add(resource);
+    private void SetResourceState(string resource, bool activeState) {
+        if (activeState) {
+            if (!activeSystems.Contains(resource)) {
+                activeSystems.Add(resource);
+            }
+        } else {
+            if (activeSystems.Contains(resource)) {
+                activeSystems.Remove(resource);
+            }
         }
-        // Trigger Generator To Increase State
-    }
-
-    private void DeactivateResourceState(string resource) {
-        if (activeSystems.Contains(resource)) {
-            activeSystems.Remove(resource);
+        // Trigger Generator To Change State
+        switch (resource) {
+            case "Tree":
+                generator.UpdateResourceState(ComponentType.Tree, activeState);
+                break;
+            case "Sunflower":
+                generator.UpdateResourceState(ComponentType.Sunflower, activeState);
+                break;
+            case "Decomposer":
+                generator.UpdateResourceState(ComponentType.Decomposer, activeState);
+                break;
         }
-        // Trigger Generator To Decrease State
     }
 
     private void TriggerGeneratorKillMode() {
@@ -226,7 +236,7 @@ public class ForestController : MonoBehaviour {
                 break;
             case ComponentType.Sunflower:
                 SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
-                    sunflowerSupply.Add(sunflowerComponent);
+                sunflowerSupply.Add(sunflowerComponent);
                 break;
             case ComponentType.Mushroom:
                 MushroomComponent mushroomComponent = newComponent.AddComponent(typeof(MushroomComponent)) as MushroomComponent;
@@ -234,8 +244,8 @@ public class ForestController : MonoBehaviour {
                 break;
             case ComponentType.Decomposer:
                 DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
-                    decomposerSupply.Add(decomposerComponent);
-                
+                decomposerSupply.Add(decomposerComponent);
+
                 break;
         }
     }

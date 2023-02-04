@@ -6,57 +6,18 @@ using UnityEngine.UI;
 public class GeneratorHUD : MonoBehaviour
 {
     public Image Panel1;
-    public Image Image1, Image2, Image3;
-    public Color color1,color2,color3,color4,color5,color6;
+    public Image waterStateImage, energyStateImage, organicStateImage;
+    public Color activeColor, depletedColor;
     public bool waterActive, energyActive, organicActive = false;
 
     private void Update() {
-        CheckWaterState();
-        CheckEnergyState();
-        CheckOrganicState();
+        waterStateImage.color = waterActive ? activeColor : depletedColor;
+        energyStateImage.color = energyActive ? activeColor : depletedColor;
+        organicStateImage.color = organicActive ? activeColor : depletedColor;
     }
 
     public void PanelcolorChange()
     {
-        Panel1.color = color1;
-    }
-
-    private void CheckWaterState()
-    {
-        if(waterActive == false)
-        {
-            Image1.color = color5;
-        }
-        else if (waterActive == true)
-        {
-            Image1.color = color6;
-            waterActive = false;
-        }
-    }
-
-    private void CheckEnergyState()
-    {
-        if (energyActive == false)
-        {
-            Image1.color = color5;
-        }
-        else if (energyActive == true)
-        {
-            Image1.color = color6;
-            energyActive = false;
-        }
-    }
-
-    private void CheckOrganicState()
-    {
-        if (organicActive == false)
-        {
-            Image1.color = color5;
-        }
-        else if (organicActive == true)
-        {
-            Image1.color = color6;
-            organicActive = false;
-        }
+        Panel1.color = activeColor;
     }
 }

@@ -12,6 +12,7 @@ namespace ForestComponent {
         Sunflower,
         Decomposer
     }
+
     public interface IForestComponent {
         float maintenanceCost { get; set; }
         float energyBuildCost { get; set; }
