@@ -8,61 +8,55 @@ public class GeneratorHUD : MonoBehaviour
     public Image Panel1;
     public Image Image1, Image2, Image3;
     public Color color1,color2,color3,color4,color5,color6;
-    public bool Gen1, Gen2, Gen3 = false;
+    public bool waterActive, energyActive, organicActive = false;
+
+    private void Update() {
+        CheckWaterState();
+        CheckEnergyState();
+        CheckOrganicState();
+    }
 
     public void PanelcolorChange()
     {
         Panel1.color = color1;
     }
 
-    private void Slot1color()
+    private void CheckWaterState()
     {
-        if(Gen1 == false)
+        if(waterActive == false)
         {
             Image1.color = color5;
         }
-        else if (Gen1 == true)
+        else if (waterActive == true)
         {
             Image1.color = color6;
-            Gen1 = false;
+            waterActive = false;
         }
     }
 
-    private void Slot2color()
+    private void CheckEnergyState()
     {
-        if (Gen2 == false)
+        if (energyActive == false)
         {
             Image1.color = color5;
         }
-        else if (Gen2 == true)
+        else if (energyActive == true)
         {
             Image1.color = color6;
-            Gen2 = false;
+            energyActive = false;
         }
     }
 
-    private void Slot3color()
+    private void CheckOrganicState()
     {
-        if (Gen3 == false)
+        if (organicActive == false)
         {
             Image1.color = color5;
         }
-        else if (Gen3 == true)
+        else if (organicActive == true)
         {
             Image1.color = color6;
-            Gen3 = false;
+            organicActive = false;
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
