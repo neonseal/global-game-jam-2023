@@ -22,10 +22,12 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
             GameObject[] items = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().inventoryItems;
             if (items != null) {   
                 GameObject selectedTile = cursorManager.CalculateRayCastHitGameObject();
-                GameObject selectRandom = GetRandomFromInventorySlow(items);
-                GameObject newComponent = PlaceGameObject(selectRandom, selectedTile.transform.position);
-                PlaySoundEffect(newComponent);
-                forestController.AddOrganicComponent(newComponent, ConvertToComponentType(items[0].tag));
+                if (selectedTile != null) {
+                    GameObject selectRandom = GetRandomFromInventorySlow(items);
+                    GameObject newComponent = PlaceGameObject(selectRandom, selectedTile.transform.position);
+                    PlaySoundEffect(newComponent);
+                    forestController.AddOrganicComponent(newComponent, ConvertToComponentType(items[0].tag));
+                }
             }
         }
     }
