@@ -5,8 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ItemDropHandler : MonoBehaviour, IDropHandler
 {
-    [SerializeField] private CursorManager cursorManager;
-
+    private CursorManager cursorManager;
     private void Awake() {
         cursorManager = new CursorManager();
     }
@@ -29,11 +28,11 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
     private GameObject PlaceGameObject(GameObject[] inventoryItems, Vector3 tilePosition) {
         int selectedItemIndex = 0;
         if (inventoryItems.Length > 1) {
-            selectedItemIndex = Random.Range(0, inventoryItems.Length - 1);
+            selectedItemIndex = Random.Range(0, inventoryItems.Length);
         }
         Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + .35f, tilePosition.z);
         Transform parentTransform = GameObject.FindGameObjectWithTag("ComponentLayer").transform;
-        Quaternion rotation = Quaternion.LookRotation(-Camera.main.transform.forward);
+        Quaternion rotation = new Quaternion(60, 180, 270, 0);
 
         return Instantiate(inventoryItems[selectedItemIndex], itemPosition, rotation, parentTransform);
     }
