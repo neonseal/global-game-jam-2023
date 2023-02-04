@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1673089327252150850}
   m_Layer: 0
   m_Name: mushroom_bigcluster
-  m_TagString: Untagged
+  m_TagString: Mushroom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
