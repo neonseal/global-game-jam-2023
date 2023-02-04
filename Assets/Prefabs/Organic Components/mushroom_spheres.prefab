@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3342730274770398770
+--- !u!1 &945090101765505517
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2677411788132349064}
-  - component: {fileID: 1335255994747157293}
-  - component: {fileID: 3846987816085852135}
+  - component: {fileID: 456678702227970903}
+  - component: {fileID: 3601095509815055602}
+  - component: {fileID: 1593533199447171128}
   m_Layer: 0
   m_Name: mushroom_spheres
   m_TagString: Mushroom
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2677411788132349064
+--- !u!4 &456678702227970903
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3342730274770398770}
+  m_GameObject: {fileID: 945090101765505517}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
@@ -33,21 +33,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &1335255994747157293
+--- !u!33 &3601095509815055602
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3342730274770398770}
-  m_Mesh: {fileID: 6894428203817054813, guid: 78d909761b9977b408f1af739dd3c538, type: 3}
---- !u!23 &3846987816085852135
+  m_GameObject: {fileID: 945090101765505517}
+  m_Mesh: {fileID: 6894428203817054813, guid: 325a8bbed4970e4489ad8ad666412d30, type: 3}
+--- !u!23 &1593533199447171128
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3342730274770398770}
+  m_GameObject: {fileID: 945090101765505517}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72871d832fda48c4b809b92e0306b28d, type: 2}
+  - {fileID: 2100000, guid: aef8d0a91e75bff42bd51ba67e0cd317, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

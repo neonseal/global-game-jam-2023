@@ -30,7 +30,6 @@ public class ForestController : MonoBehaviour {
 
     private void Awake() {
         generator = new GeneratorController();
-        //counterHUD = new CounterHUD(defaultResourceAmount, defaultResourceAmount, defaultResourceAmount);
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
 
@@ -81,7 +80,7 @@ public class ForestController : MonoBehaviour {
             waterGenerationRate += tree.GetCurrentGenerationRate();
         }
         totalWater += waterGenerationRate;
-
+        
         // Apply Forest Maintenance Costs
         if (sunflowerCost > 0 || decomposerCost > 0) {
             totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
@@ -185,6 +184,7 @@ public class ForestController : MonoBehaviour {
             case ComponentType.Tree:
                 TreeComponent treeComponent = newComponent.AddComponent(typeof(TreeComponent)) as TreeComponent;
                 treeSupply.Add(treeComponent);
+                Debug.Log(treeSupply.Count);
                 break;
             case ComponentType.Sunflower:
                 SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
