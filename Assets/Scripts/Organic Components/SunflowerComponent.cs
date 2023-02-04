@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ForestComponent;
 
 public class SunflowerComponent : MonoBehaviour, IForestComponent {
     private ResourceGenerator resourceGenerator;

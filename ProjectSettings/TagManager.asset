@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Interactable
   - ComponentLayer
+  - Tree
+  - Mushroom
+  - Sunflower
+  - Decomposer
   layers:
   - Default
   - TransparentFX

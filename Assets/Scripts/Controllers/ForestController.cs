@@ -2,38 +2,43 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ForestComponent;
 
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;
 
     [Header("Total Resource Counts")]
-    [SerializeField] private float totalWater = 100.0f;
-    [SerializeField] private float totalEnergy = 100.0f;
-    [SerializeField] private float totalOrganic = 100.0f;
+    private static float defaultResourceAmount = 100.0f;
+    [SerializeField] private float totalWater = defaultResourceAmount;
+    [SerializeField] private float totalEnergy = defaultResourceAmount;
+    [SerializeField] private float totalOrganic = defaultResourceAmount;
 
     [Header("Forest Component Collections")]
-    private TreeComponent[] treeSupply;
-    private SunflowerComponent[] sunflowerSupply;
-    private DecomposerComponent[] decomposerSupply;
-    private MushroomComponent[] mushroomSupply;
+    private static List<TreeComponent> treeSupply;
+    private static List<SunflowerComponent> sunflowerSupply;
+    private static List<DecomposerComponent> decomposerSupply;
+    private static List<MushroomComponent> mushroomSupply;
+    private float treeCost, sunflowerCost, decomposerCost = 0.0f;
 
     [Header("Timer")]
     private float timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
-    [Header("Failing Resources")]
+    [Header("Resource Tracking")]
     [SerializeField] private List<string> activeSystems;
+    [SerializeField] private CounterHUD counterHUD;
 
     private void Awake() {
         generator = new GeneratorController();
-
+        //counterHUD = new CounterHUD(defaultResourceAmount, defaultResourceAmount, defaultResourceAmount);
+        counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
 
         // Initialize Forest Component Collecitons
-        treeSupply = new TreeComponent[0];
-        sunflowerSupply = new SunflowerComponent[0];
-        decomposerSupply = new DecomposerComponent[0];
-        mushroomSupply = new MushroomComponent[0];
+        treeSupply = new List<TreeComponent>();
+        sunflowerSupply = new List<SunflowerComponent>();
+        decomposerSupply = new List<DecomposerComponent>();
+        mushroomSupply = new List<MushroomComponent>();
 
         // Set up Resource State Traacker
         activeSystems = new List<string>();
@@ -45,132 +50,115 @@ public class ForestController : MonoBehaviour {
     private void Update() {
         timer -= Time.fixedDeltaTime;
 
-        if (timer <= 0.0f) {
-            ApplyForestResourceGeneration();
-            ApplyForestMaintenanceCost();
-            ApplyGeneratorConsumptionCost();
+        UpdateForestMaintenanceCosts();
 
-            if (totalWater == 0 && totalEnergy == 0 && totalOrganic == 0) {
-                TriggerGeneratorKillMode();
-            }
+        if (timer <= 0.0f) {
+            UpdateWaterResourceSupply();
+            UpdateEnergyResourceSupply();
+            UpdateOrganicResourceSupply();
+            UpdateCounterHUD();
 
             timer = timerResetValue;
         }
     }
 
-    private void ApplyForestResourceGeneration() {
-        HandleWaterResourceGeneration();
-        HandleEneryResourceGeneration();
-        HandleOrganicResourceGeneration();
-    }
-
-    private void ApplyForestMaintenanceCost() {
+    private void UpdateForestMaintenanceCosts() {
         // Calculate total cost to maintain forest
-        float treeCost = treeSupply.Length > 0 ? treeSupply.Length * treeSupply[0].maintenanceCost : 0;
-        float sunflowerCost = sunflowerSupply.Length > 0 ? sunflowerSupply.Length * sunflowerSupply[0].maintenanceCost : 0;
-        float decomposerCost = decomposerSupply.Length > 0 ? decomposerSupply.Length * decomposerSupply[0].maintenanceCost : 0;
-
-        if (sunflowerCost > 0 || decomposerCost > 0) {
-            HandleWaterResourceConsumption((sunflowerCost + decomposerCost) / 2);
-        }
-
-        if (treeCost > 0 || decomposerCost > 0) {
-            HandleEnergyResourceConsumption((treeCost + decomposerCost) / 2);
-        }
-        
-        if (treeCost > 0 || sunflowerCost > 0) {
-            HandleOrganicResourceConsumption((treeCost + sunflowerCost) / 2);
-        }
+        treeCost = treeSupply.Count > 0 ? treeSupply.Count * treeSupply[0].maintenanceCost : 0;
+        sunflowerCost = sunflowerSupply.Count > 0 ? sunflowerSupply.Count * sunflowerSupply[0].maintenanceCost : 0;
+        decomposerCost = decomposerSupply.Count > 0 ? decomposerSupply.Count * decomposerSupply[0].maintenanceCost : 0;
     }
 
-    private void ApplyGeneratorConsumptionCost() {
-        HandleWaterResourceConsumption(generator.EnergyConsumptionRate);
-        HandleEnergyResourceConsumption(generator.WaterConsumptionRate);
-        HandleOrganicResourceConsumption(generator.OrganicConsumptionRate);
-    }
-
-    #region Handle Resource Generation
-    private void HandleWaterResourceGeneration() {
+    private void UpdateWaterResourceSupply() {
         // Capture current value to check for state change
         float lastTotalValue = totalWater;
-        // Calculate total resource resource generation power
+
+        // Apply Resource Generation
         float waterGenerationRate = 0.0f;
 
+        // Calculate total resource resource generation power
         foreach (TreeComponent tree in treeSupply) {
             waterGenerationRate += tree.GetCurrentGenerationRate();
         }
-
         totalWater += waterGenerationRate;
 
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0) {
-            ActivateResourceState("Water");
+        // Apply Forest Maintenance Costs
+        if (sunflowerCost > 0 || decomposerCost > 0) {
+            totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
+        }
+
+        // Apply Generation Consumption
+        totalWater = AttemptDecrement(totalWater, generator.WaterConsumptionRate);
+
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalWater <= 0) {
+            // Water now depleted
+            generator.UpdateResourceState(ComponentType.Tree, false);
+        } else if (lastTotalValue <= 0 && totalWater > 0) {
+            // Water Replenished
+            generator.UpdateResourceState(ComponentType.Tree, true);
         }
     }
-    private void HandleEneryResourceGeneration() {
+
+    private void UpdateEnergyResourceSupply() {
         // Capture current value to check for state change
         float lastTotalValue = totalEnergy;
-        // Calculate total resource resource generation power
+
+        // Apply Resource Generation
         float energyGenerationRate = 0.0f;
 
+        // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
             energyGenerationRate += sunflower.GetCurrentGenerationRate();
         }
-
         totalEnergy += energyGenerationRate;
 
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0) {
-            ActivateResourceState("Energy");
+        // Apply Forest Maintenance Costs
+        if (treeCost > 0 || decomposerCost > 0) {
+            totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
+        }
+
+        // Apply Generation Consumption
+        totalEnergy = AttemptDecrement(totalEnergy, generator.EnergyConsumptionRate);
+
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalEnergy <= 0) {
+            // Energy now depleted
+            generator.UpdateResourceState(ComponentType.Sunflower, false);
+        } else if (lastTotalValue <= 0 && totalEnergy > 0) {
+            // Energy Replenished
+            generator.UpdateResourceState(ComponentType.Sunflower, true);
         }
     }
-    private void HandleOrganicResourceGeneration() {
+
+    private void UpdateOrganicResourceSupply() {
         // Capture current value to check for state change
         float lastTotalValue = totalOrganic;
-        // Calculate total resource generation power
+
+        // Apply Resource Generation
         float organicGenerationRate = 0.0f;
 
+        // Calculate total resource resource generation power
         foreach (DecomposerComponent decomposer in decomposerSupply) {
             organicGenerationRate += decomposer.GetCurrentGenerationRate();
         }
-
         totalOrganic += organicGenerationRate;
 
-        // If we have most into the positive, remove resource from the failing states
-        if (lastTotalValue == 0) {
-            ActivateResourceState("Organic");
+        // Apply Forest Maintenance Costs
+        if (treeCost > 0 || sunflowerCost > 0) {
+            totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
         }
-    }
-    #endregion
 
-    #region Handle Resource Consumption
-    private void HandleWaterResourceConsumption(float consumptionAmount) {
-        float lastTotalValue = totalWater;
-        totalWater = AttemptDecrement(totalWater, consumptionAmount);
+        // Apply Generation Consumption
+        totalOrganic = AttemptDecrement(totalOrganic, generator.OrganicConsumptionRate);
 
-        // Check if we were positive, and now hit  zero
-        if (lastTotalValue > 0 && totalWater == 0) {
-            DeactivateResourceState("Water");
-        }
-    }
-
-    private void HandleEnergyResourceConsumption(float consumptionAmount) {
-        float lastTotalEnergy = totalEnergy;
-        totalEnergy = AttemptDecrement(totalEnergy, consumptionAmount);
-
-        // Check if we were positive, and now hit  zero
-        if (lastTotalEnergy > 0 && totalEnergy == 0) {
-            DeactivateResourceState("Energy");
-        }
-    }
-
-    private void HandleOrganicResourceConsumption(float consumptionAmount) {
-        float lastTotalOrganic = totalOrganic;
-        totalOrganic = AttemptDecrement(totalOrganic, consumptionAmount);
-
-        // Check if we were positive, and now hit  zero
-        if (lastTotalOrganic > 0 && totalOrganic == 0) {
-            DeactivateResourceState("Organic");
+        // Check for Generator State Change
+        if (lastTotalValue > 0 && totalOrganic <= 0) {
+            // Energy now depleted
+            generator.UpdateResourceState(ComponentType.Decomposer, false);
+        } else if (lastTotalValue <= 0 && totalOrganic > 0) {
+            // Energy Replenished
+            generator.UpdateResourceState(ComponentType.Decomposer, true);
         }
     }
 
@@ -181,25 +169,37 @@ public class ForestController : MonoBehaviour {
 
         return target -= decrement;
     }
-    #endregion
 
     #region Resource State Manager
-    private void ActivateResourceState(string resource) {
-        if (!activeSystems.Contains(resource)) {
-            activeSystems.Add(resource);
-        }
-        // Trigger Generator To Increase State
-    }
 
-    private void DeactivateResourceState(string resource) {
-        if (activeSystems.Contains(resource)) {
-            activeSystems.Remove(resource);
-        }
-        // Trigger Generator To Decrease State
+    private void UpdateCounterHUD() {
+        counterHUD.energyCount = totalEnergy;
+        counterHUD.waterCount = totalWater;
+        counterHUD.organicCount = totalOrganic;
     }
+    #endregion
 
-    private void TriggerGeneratorKillMode() {
-        Debug.Log("GENERATOR IS EATING!");
+    #region Manage Organic Component Supplies
+    public void AddOrganicComponent(GameObject newComponent, ComponentType type) {
+        switch (type) {
+            case ComponentType.Tree:
+                TreeComponent treeComponent = newComponent.AddComponent(typeof(TreeComponent)) as TreeComponent;
+                treeSupply.Add(treeComponent);
+                break;
+            case ComponentType.Sunflower:
+                SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
+                sunflowerSupply.Add(sunflowerComponent);
+                break;
+            case ComponentType.Mushroom:
+                MushroomComponent mushroomComponent = newComponent.AddComponent(typeof(MushroomComponent)) as MushroomComponent;
+                mushroomSupply.Add(mushroomComponent);
+                break;
+            case ComponentType.Decomposer:
+                DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
+                decomposerSupply.Add(decomposerComponent);
+
+                break;
+        }
     }
     #endregion
 }

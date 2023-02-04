@@ -2513,7 +2513,7 @@ GameObject:
   - component: {fileID: 506057473}
   - component: {fileID: 506057474}
   m_Layer: 0
-  m_Name: ForestControlelr
+  m_Name: ForestController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13652,7 +13652,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cd5bcc31aeea5946b5135b04f642ec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorManager: {fileID: 0}
 --- !u!1 &1982319609 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2796653242930443298, guid: 3b57cfd581a878246b20b301ecebc6b3, type: 3}
