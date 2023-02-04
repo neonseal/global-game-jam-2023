@@ -7,10 +7,15 @@ using ForestComponent;
 public class GeneratorController : MonoBehaviour {
     private static GeneratorHUD generatorHUD;
 
+    [Header("Audio Controller")]
+    [SerializeField] AudioController audioController;
+    private AudioController[] audioTracks;
+
+    [Header("Consumption Costs")]
     [SerializeField] private float energyConsumptionRate = 20f;
     [SerializeField] private float waterConsumptionRate = 20f;
     [SerializeField] private float organicConsumptionRate = 20f;
-    [SerializeField] private int failingCount;
+
     [Header("Resource States")]
     // Dictionary <ResourceName, Active>
     private static bool[] resourceStates;
@@ -18,12 +23,14 @@ public class GeneratorController : MonoBehaviour {
 
     private void Awake() {
         generatorHUD = gameObject.GetComponent<GeneratorHUD>();
+       /* audioController = new AudioController();
+        audioTracks = audioController.GetComponents<AudioController>();*/
         // Set initial resource states for Water, Energy, Organic
         resourceStates = new bool[3] { true, true, true };
     }
 
     private void Update() {
-        failingCount = resourceStates.Count(state => state == false);
+        int failingCount = resourceStates.Count(state => state == false);
     }
 
     #region Resource State Management
@@ -43,6 +50,8 @@ public class GeneratorController : MonoBehaviour {
                 break;
         }
     }
+
+
     #endregion
 
     #region Getters and Setters
@@ -50,17 +59,15 @@ public class GeneratorController : MonoBehaviour {
         get { return energyConsumptionRate; }
         set { energyConsumptionRate = value; }
     }
+
     public float WaterConsumptionRate {
         get { return waterConsumptionRate; }
         set { waterConsumptionRate = value; }
     }
+
     public float OrganicConsumptionRate {
         get { return organicConsumptionRate; }
         set { organicConsumptionRate = value; }
-    }
-    public int FailingCount {
-        get { return failingCount; }
-        set { failingCount = value; }
     }
     #endregion
 }
