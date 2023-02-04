@@ -10,7 +10,7 @@ public class GeneratorController : MonoBehaviour {
     [SerializeField] private float energyConsumptionRate = 20f;
     [SerializeField] private float waterConsumptionRate = 20f;
     [SerializeField] private float organicConsumptionRate = 20f;
-
+    [SerializeField] private int failingCount;
     [Header("Resource States")]
     // Dictionary <ResourceName, Active>
     private static bool[] resourceStates;
@@ -23,7 +23,7 @@ public class GeneratorController : MonoBehaviour {
     }
 
     private void Update() {
-        int failingCount = resourceStates.Count(state => state == false);
+        failingCount = resourceStates.Count(state => state == false);
     }
 
     #region Resource State Management
@@ -43,8 +43,6 @@ public class GeneratorController : MonoBehaviour {
                 break;
         }
     }
-
-
     #endregion
 
     #region Getters and Setters
@@ -52,15 +50,17 @@ public class GeneratorController : MonoBehaviour {
         get { return energyConsumptionRate; }
         set { energyConsumptionRate = value; }
     }
-
     public float WaterConsumptionRate {
         get { return waterConsumptionRate; }
         set { waterConsumptionRate = value; }
     }
-
     public float OrganicConsumptionRate {
         get { return organicConsumptionRate; }
         set { organicConsumptionRate = value; }
+    }
+    public int FailingCount {
+        get { return failingCount; }
+        set { failingCount = value; }
     }
     #endregion
 }

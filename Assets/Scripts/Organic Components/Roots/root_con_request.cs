@@ -11,18 +11,18 @@ public class root_con_request : MonoBehaviour
     [SerializeField]
     private int currentConnections = 0;
 
-    private void connectRoots(connectorObject)
+    private void connectRoots()
     {
         if(currentConnections < maxConnections)
         {
             currentConnections += 1;
             
-            share_resources(connectorObject);
+            share_resources();
         }
         
     }
     
-    private void share_resources(connectorObject)
+    private void share_resources()
     {
         //connectorObject.sendMessage("want nutrients?") ("have nutrients?")
         if(currentConnections > 0 )
