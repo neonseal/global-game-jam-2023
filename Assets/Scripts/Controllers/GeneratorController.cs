@@ -43,10 +43,6 @@ public class GeneratorController : MonoBehaviour {
                 break;
         }
     }
-
-
-
-
     #endregion
 
     #region Getters and Setters
@@ -54,12 +50,10 @@ public class GeneratorController : MonoBehaviour {
         get { return energyConsumptionRate; }
         set { energyConsumptionRate = value; }
     }
-
     public float WaterConsumptionRate {
         get { return waterConsumptionRate; }
         set { waterConsumptionRate = value; }
     }
-
     public float OrganicConsumptionRate {
         get { return organicConsumptionRate; }
         set { organicConsumptionRate = value; }

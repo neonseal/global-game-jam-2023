@@ -31,10 +31,9 @@ public class roots : MonoBehaviour
 
         for (int i = 0; i < numColliders; i++)
         {
-            if(colliders[i] != null) 
+            if(colliders[i].tag == "roots") 
             {
-                // TODO: Check to see if collider can accept root connection to fix error in console
-                //colliders[i].SendMessage("connectRoots", gameObject.name);
+                colliders[i].SendMessage("connectRoots", gameObject);
             }
         }
     }
