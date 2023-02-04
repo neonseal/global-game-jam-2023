@@ -6,7 +6,10 @@ public class root_con_request : MonoBehaviour
 {
 
     [SerializeField]
-    private bool connected = false;
+    private int maxConnections = 4;
+    
+    [SerializeField]
+    private int currentConnections = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -14,12 +17,20 @@ public class root_con_request : MonoBehaviour
         EventManager.UpdateEvent += connectRoots;
     }
 
-    private void connectRoots()
+    private void connectRoots(connectorObject)
     {
-        if(connected == false)
+        if(currentConnections < maxConnections)
         {
-            connected = true;
-        }        
+            currentConnections += 1;
+            
+            share_resources(connectorObject);
+        }
+        
+    }
+    
+    private void share_resources(connectorObject)
+    {
+        //connectorObject.sendMessage("want nutrients?") ("have nutrients?")
     }
 
     private void onDisable()
