@@ -8,8 +8,7 @@ using System.Linq;
 
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;
-
-    [SerializeField] private CounterHUD counterHUD;
+    private static CounterHUD counterHUD;
 
     [Header("Total Resource Counts")]
     private static float defaultResourceAmount = 2000.0f;
@@ -33,6 +32,7 @@ public class ForestController : MonoBehaviour {
 
     private void Awake() {
         generator = new GeneratorController();
+        counterHUD = gameObject.GetComponentInChildren<CounterHUD>();
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
 
@@ -114,7 +114,7 @@ public class ForestController : MonoBehaviour {
         if (lastTotalValue > 0 && totalWater <= 0) {
             // Water now depleted
             generator.UpdateResourceState(ComponentType.Tree, false);
-        } else if (lastTotalValue <= 0 && totalWater > 0) {
+        } else if (totalWater > 0) {
             // Water Replenished
             generator.UpdateResourceState(ComponentType.Tree, true);
         }
@@ -145,7 +145,8 @@ public class ForestController : MonoBehaviour {
         if (lastTotalValue > 0 && totalEnergy <= 0) {
             // Energy now depleted
             generator.UpdateResourceState(ComponentType.Sunflower, false);
-        } else if (lastTotalValue <= 0 && totalEnergy > 0) {
+
+        } else if (totalEnergy > 0) {
             // Energy Replenished
             generator.UpdateResourceState(ComponentType.Sunflower, true);
         }
@@ -176,7 +177,7 @@ public class ForestController : MonoBehaviour {
         if (lastTotalValue > 0 && totalOrganic <= 0) {
             // Energy now depleted
             generator.UpdateResourceState(ComponentType.Decomposer, false);
-        } else if (lastTotalValue <= 0 && totalOrganic > 0) {
+        } else if (totalOrganic > 0) {
             // Energy Replenished
             generator.UpdateResourceState(ComponentType.Decomposer, true);
         }
@@ -253,10 +254,12 @@ public class ForestController : MonoBehaviour {
                 if (totalEnergy > decomposerComponent.energyBuildCost && totalWater > decomposerComponent.waterBuildCost) {
                     totalWater = AttemptDecrement(totalWater, decomposerComponent.waterBuildCost);
                     totalEnergy = AttemptDecrement(totalEnergy, decomposerComponent.energyBuildCost);
+
                     decomposerSupply.Add(decomposerComponent);
                 }
                 break;
         }
+        UpdateCounterHUD();
     }
 
     public void DamageResourceSupply(ComponentType type) {

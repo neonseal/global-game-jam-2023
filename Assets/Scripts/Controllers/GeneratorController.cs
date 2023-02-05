@@ -20,19 +20,39 @@ namespace Generator {
         private static AudioSource[] soundEffects;
 
         [Header("Consumption Costs")]
-        [SerializeField] private float energyConsumptionRate = 75f;
-        [SerializeField] private float waterConsumptionRate = 100f;
-        [SerializeField] private float organicConsumptionRate = 50f;
+        [SerializeField] private float minConsumptionRate = 100.0f;
+        [SerializeField] private float maxConsumptionRate = 1000.0f;
+        private float lastEnergyRate = 0.0f;
+        [SerializeField] private float energyConsumptionRate;
+        private float lastWaterRate = 0.0f;
+        [SerializeField] private float waterConsumptionRate;
+        private float lastOrganicRate = 0.0f;
+        [SerializeField] private float organicConsumptionRate;
 
         [Header("Resource States")]
         // Dictionary <ResourceName, Active>
         private static bool[] resourceStates;
         private int failingCount;
 
+        [Header("Generator Consumption Randomizer")]
+        [SerializeField] private float generatorTimerReset = 15.0f;
+        private float timer;
+
         private void Awake() {
             generatorHUD = gameObject.GetComponent<GeneratorHUD>();
             soundEffects = gameObject.GetComponents<AudioSource>();
             audioController = gameObject.GetComponentInChildren<AudioController>();
+
+            timer = generatorTimerReset;
+
+            energyConsumptionRate = 2.0f * minConsumptionRate;
+            lastEnergyRate = energyConsumptionRate;
+
+            waterConsumptionRate =  1.5f * minConsumptionRate;
+            lastWaterRate = waterConsumptionRate;
+
+            organicConsumptionRate = minConsumptionRate;
+            lastOrganicRate = organicConsumptionRate;
 
             // Set initial resource states for Water, Energy, Organic
             resourceStates = new bool[3] { true, true, true };
@@ -40,6 +60,63 @@ namespace Generator {
 
         private void Update() {
             UpdateFailingCount();
+
+            timer -= Time.deltaTime;
+
+            if (timer <= 0.0f) {
+                energyConsumptionRate = RandomizeConsumptionRate(ComponentType.Sunflower);
+                waterConsumptionRate = RandomizeConsumptionRate(ComponentType.Tree);
+                organicConsumptionRate = RandomizeConsumptionRate(ComponentType.Decomposer);
+            }
+        }
+
+        private float RandomizeConsumptionRate(ComponentType type) {
+            float newRate = 0.0f;
+            float floor = minConsumptionRate;
+            // Randomly decide if we push high if last value was low
+            // 2 out of 3 chance of adjusting higher
+            bool adjustHigher = false;
+
+            switch (type) {
+                case ComponentType.Sunflower:
+                    if (lastEnergyRate < maxConsumptionRate * 0.3) {
+                        adjustHigher = Random.Range(0, 3) > 1;
+                    }
+
+                    if (adjustHigher) {
+                        floor *= 2;
+                    }
+
+                    energyConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    lastEnergyRate = energyConsumptionRate;
+                    break;
+                case ComponentType.Tree:
+                    if (lastWaterRate < maxConsumptionRate * 0.3) {
+                        adjustHigher = Random.Range(0, 3) > 1;
+                    }
+
+                    if (adjustHigher) {
+                        floor *= 2;
+                    }
+
+                    waterConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    lastEnergyRate = waterConsumptionRate;
+                    break;
+                case ComponentType.Decomposer:
+                    if (lastOrganicRate < maxConsumptionRate * 0.3) {
+                        adjustHigher = Random.Range(0, 3) > 1;
+                    }
+
+                    if (adjustHigher) {
+                        floor *= 2;
+                    }
+
+                    organicConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    lastOrganicRate = organicConsumptionRate;
+                    break;
+            }
+
+            return newRate;
         }
 
         #region Resource State Management
