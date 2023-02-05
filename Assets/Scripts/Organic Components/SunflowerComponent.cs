@@ -14,6 +14,8 @@ public class SunflowerComponent : MonoBehaviour, IForestComponent {
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
+        resourceGenerator.AmountPerCycle = 200.0f;
+        resourceGenerator.BaseAmountPerCycle = 200.0f;
         health = maxHealth;
     }
 

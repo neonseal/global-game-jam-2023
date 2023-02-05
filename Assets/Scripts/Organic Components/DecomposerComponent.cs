@@ -14,8 +14,8 @@ public class DecomposerComponent : MonoBehaviour, IForestComponent {
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
-        resourceGenerator.AmountPerCycle = 10.0f;
-        resourceGenerator.BaseAmountPerCycle = 10.0f;
+        resourceGenerator.AmountPerCycle = 100.0f;
+        resourceGenerator.BaseAmountPerCycle = 100.0f;
         health = maxHealth;
     }
 

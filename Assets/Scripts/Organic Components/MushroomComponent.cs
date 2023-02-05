@@ -6,16 +6,16 @@ using ForestComponent;
 public class MushroomComponent : MonoBehaviour, IForestComponent {
     private ResourceGenerator resourceGenerator;
     [SerializeField] public float maintenanceCost { get; set; } = 10f;
-    [SerializeField] public float energyBuildCost { get; set; } = 0f;
-    [SerializeField] public float waterBuildCost { get; set; } = 0f;
-    [SerializeField] public float organicBuildCost { get; set; } = 0f;
+    [SerializeField] public float energyBuildCost { get; set; } = 100f;
+    [SerializeField] public float waterBuildCost { get; set; } = 100f;
+    [SerializeField] public float organicBuildCost { get; set; } = 100f;
     [SerializeField] public float maxHealth { get; set; } = 100;
     [SerializeField] public float health { get; set; }
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
-        resourceGenerator.AmountPerCycle = 10.0f;
-        resourceGenerator.BaseAmountPerCycle = 10.0f;
+        resourceGenerator.AmountPerCycle = 2.0f;
+        resourceGenerator.BaseAmountPerCycle = 25.0f;
         health = maxHealth;
     }
 
