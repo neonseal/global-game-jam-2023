@@ -31,18 +31,24 @@ public class GeneratorHUD : MonoBehaviour
             } else {
                 waterStateImage.sprite = systemStable;
             }
-        } else {
+        } else if (waterRate <= 0) {
             waterStateImage.sprite = depletedImage;
+        } else {
+            // default to stable image
+            waterStateImage.sprite = systemStable;
         }
 
-        if (energyRate > 0) {
-            if (energyRate > 0.2) {
+        if (energyRate > 0) { 
+            if (energyRate > 0.25) {
                 energyStateImage.sprite = energyRate >= 0.5 ? increasingConsumption : decreasingComsumption;
             } else {
                 energyStateImage.sprite = systemStable;
             }
-        } else {
+        } else if (energyRate <= 0) {
             energyStateImage.sprite = depletedImage;
+        } else {
+            // default to stable image
+            energyStateImage.sprite = systemStable;
         }
 
         if (organicRate > 0) {
@@ -51,8 +57,11 @@ public class GeneratorHUD : MonoBehaviour
             } else {
                 organicStateImage.sprite = systemStable;
             }
-        } else {
+        } else if (organicRate <= 0) {
             organicStateImage.sprite = depletedImage;
+        } else {
+            // default to stable image
+            organicStateImage.sprite = systemStable;
         }
     }
 

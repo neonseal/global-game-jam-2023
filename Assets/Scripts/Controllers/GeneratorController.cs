@@ -57,7 +57,6 @@ namespace Generator {
             // Set initial resource states for Water, Energy, Organic
             resourceStates = new bool[3] { true, true, true };
 
-            Debug.Log("SETTING ENERGY: " + energyConsumptionRate / maxConsumptionRate);
             generatorHUD.SetResourceState(ComponentType.Tree, waterConsumptionRate / maxConsumptionRate);
             generatorHUD.SetResourceState(ComponentType.Sunflower, energyConsumptionRate / maxConsumptionRate);
             generatorHUD.SetResourceState(ComponentType.Decomposer, organicConsumptionRate / maxConsumptionRate);
