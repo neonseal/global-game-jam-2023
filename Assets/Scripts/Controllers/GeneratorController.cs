@@ -5,83 +5,97 @@ using UnityEngine;
 using ForestComponent;
 using Audio;
 
-public class GeneratorController : MonoBehaviour {
-    private static GeneratorHUD generatorHUD;
-
-    [Header("Audio Controller")]
-    [SerializeField] private AudioController audioController;
-    private AudioSource[] soundEffects;
-
-    [Header("Consumption Costs")]
-    [SerializeField] private float energyConsumptionRate = 20f;
-    [SerializeField] private float waterConsumptionRate = 20f;
-    [SerializeField] private float organicConsumptionRate = 20f;
-
-    [Header("Resource States")]
-    // Dictionary <ResourceName, Active>
-    private static bool[] resourceStates;
-    private int failingCount;
-
-    private void Awake() {
-        generatorHUD = gameObject.GetComponent<GeneratorHUD>();
-        soundEffects = gameObject.GetComponents<AudioSource>();
-       /* audioController = gameObject.GetComponent<AudioController>();
-        if (audioController != null) {
-            Debug.Log("FOUND AUDIO CONTROLLER");
-        }*/
-        // Set initial resource states for Water, Energy, Organic
-        resourceStates = new bool[3] { true, true, true };
+namespace Generator {
+    public enum SoundEffects {
+        DecreaseState, 
+        IncreaseState,
+        GeneratorIdle
     }
 
-    private void Update() {
-        UpdateFailingCount();
-    }
+    public class GeneratorController : MonoBehaviour {
+        private static GeneratorHUD generatorHUD;
 
-    #region Resource State Management
-    public void UpdateResourceState(ComponentType type, bool activeState) {
-        switch(type) {
-            case ComponentType.Tree:
-                resourceStates[0] = activeState;
-                generatorHUD.SetResourceState(ComponentType.Tree, activeState);
-                break;
-            case ComponentType.Sunflower:
-                resourceStates[1] = activeState;
-                generatorHUD.SetResourceState(ComponentType.Sunflower, activeState);
-                break;
-            case ComponentType.Decomposer:
-                resourceStates[2] = activeState;
-                generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
-                break;
+        [Header("Audio Controller")]
+        private AudioController audioController;
+        private AudioSource[] soundEffects;
+
+        [Header("Consumption Costs")]
+        [SerializeField] private float energyConsumptionRate = 20f;
+        [SerializeField] private float waterConsumptionRate = 20f;
+        [SerializeField] private float organicConsumptionRate = 20f;
+
+        [Header("Resource States")]
+        // Dictionary <ResourceName, Active>
+        private static bool[] resourceStates;
+        private int failingCount;
+
+        private void Awake() {
+            generatorHUD = gameObject.GetComponent<GeneratorHUD>();
+            soundEffects = gameObject.GetComponents<AudioSource>();
+            audioController = gameObject.GetComponentInChildren<AudioController>();
+            // Set initial resource states for Water, Energy, Organic
+            resourceStates = new bool[3] { true, true, true };
         }
-        UpdateFailingCount();
 
-        if (failingCount == 3) {
-            audioController.PlayMusicTrack(MusicTracks.GameOver);
-        } else {
-            // Update Music
-            audioController.PlayMusicTrack((MusicTracks)failingCount);
+        private void Update() {
+            UpdateFailingCount();
         }
+
+        #region Resource State Management
+        public void UpdateResourceState(ComponentType type, bool activeState) {
+            switch (type) {
+                case ComponentType.Tree:
+                    resourceStates[0] = activeState;
+                    generatorHUD.SetResourceState(ComponentType.Tree, activeState);
+                    break;
+                case ComponentType.Sunflower:
+                    resourceStates[1] = activeState;
+                    generatorHUD.SetResourceState(ComponentType.Sunflower, activeState);
+                    break;
+                case ComponentType.Decomposer:
+                    resourceStates[2] = activeState;
+                    generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
+                    break;
+            }
+            PlayStateChangeSoundEffect(activeState);
+            UpdateFailingCount();
+
+            if (failingCount == 3) {
+                audioController.PlayMusicTrack(MusicTracks.GameOver);
+            } else {
+                // Update Music
+                audioController.PlayMusicTrack((MusicTracks)failingCount);
+            }
+        }
+
+        private void PlayStateChangeSoundEffect(bool activating) {
+            if (activating) {
+                soundEffects[(int)SoundEffects.IncreaseState].Play();
+            } else {
+                soundEffects[(int)SoundEffects.DecreaseState].Play();
+            }
     }
 
-    private void UpdateFailingCount() {
-        failingCount = resourceStates.Count(state => state == false);
-    }
-    #endregion
+        private void UpdateFailingCount() {
+            failingCount = resourceStates.Count(state => state == false);
+        }
+        #endregion
 
-    #region Getters and Setters
-    public float EnergyConsumptionRate {
-        get { return energyConsumptionRate; }
-        set { energyConsumptionRate = value; }
-    }
+        #region Getters and Setters
+        public float EnergyConsumptionRate {
+            get { return energyConsumptionRate; }
+            set { energyConsumptionRate = value; }
+        }
 
-    public float WaterConsumptionRate {
-        get { return waterConsumptionRate; }
-        set { waterConsumptionRate = value; }
-    }
+        public float WaterConsumptionRate {
+            get { return waterConsumptionRate; }
+            set { waterConsumptionRate = value; }
+        }
 
-    public float OrganicConsumptionRate {
-        get { return organicConsumptionRate; }
-        set { organicConsumptionRate = value; }
+        public float OrganicConsumptionRate {
+            get { return organicConsumptionRate; }
+            set { organicConsumptionRate = value; }
+        }
+        #endregion
     }
-    #endregion
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForestComponent;
+using Generator; 
 
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;

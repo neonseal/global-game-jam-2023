@@ -5,10 +5,9 @@ using System.Linq;
 
 namespace Audio {
     public enum MusicTracks {
-        Default, 
-        MainLoopOne,
-        MainLoopTwo, 
-        MainLoopThree, 
+        Serene,
+        Mild, 
+        Stress, 
         GameOver
     }
 
