@@ -56,6 +56,11 @@ namespace Generator {
 
             // Set initial resource states for Water, Energy, Organic
             resourceStates = new bool[3] { true, true, true };
+
+            Debug.Log("SETTING ENERGY: " + energyConsumptionRate / maxConsumptionRate);
+            generatorHUD.SetResourceState(ComponentType.Tree, waterConsumptionRate / maxConsumptionRate);
+            generatorHUD.SetResourceState(ComponentType.Sunflower, energyConsumptionRate / maxConsumptionRate);
+            generatorHUD.SetResourceState(ComponentType.Decomposer, organicConsumptionRate / maxConsumptionRate);
         }
 
         private void Update() {
@@ -67,10 +72,13 @@ namespace Generator {
                 energyConsumptionRate = RandomizeConsumptionRate(ComponentType.Sunflower);
                 waterConsumptionRate = RandomizeConsumptionRate(ComponentType.Tree);
                 organicConsumptionRate = RandomizeConsumptionRate(ComponentType.Decomposer);
+
+                timer = generatorTimerReset;
             }
         }
 
         private float RandomizeConsumptionRate(ComponentType type) {
+            Debug.Log("RANDOMIZING RATE: " + type); ;
             float newRate = 0.0f;
             float floor = minConsumptionRate;
             // Randomly decide if we push high if last value was low
@@ -89,6 +97,9 @@ namespace Generator {
 
                     energyConsumptionRate = Random.Range(floor, maxConsumptionRate);
                     lastEnergyRate = energyConsumptionRate;
+
+                    // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
+                    generatorHUD.SetResourceState(ComponentType.Sunflower, energyConsumptionRate / maxConsumptionRate);
                     break;
                 case ComponentType.Tree:
                     if (lastWaterRate < maxConsumptionRate * 0.3) {
@@ -101,6 +112,9 @@ namespace Generator {
 
                     waterConsumptionRate = Random.Range(floor, maxConsumptionRate);
                     lastEnergyRate = waterConsumptionRate;
+
+                    // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
+                    generatorHUD.SetResourceState(ComponentType.Tree, waterConsumptionRate / maxConsumptionRate);
                     break;
                 case ComponentType.Decomposer:
                     if (lastOrganicRate < maxConsumptionRate * 0.3) {
@@ -113,6 +127,9 @@ namespace Generator {
 
                     organicConsumptionRate = Random.Range(floor, maxConsumptionRate);
                     lastOrganicRate = organicConsumptionRate;
+
+                    // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
+                    generatorHUD.SetResourceState(ComponentType.Decomposer, organicConsumptionRate / maxConsumptionRate);
                     break;
             }
 
@@ -124,15 +141,12 @@ namespace Generator {
             switch (type) {
                 case ComponentType.Tree:
                     resourceStates[0] = activeState;
-                    generatorHUD.SetResourceState(ComponentType.Tree, activeState);
                     break;
                 case ComponentType.Sunflower:
                     resourceStates[1] = activeState;
-                    generatorHUD.SetResourceState(ComponentType.Sunflower, activeState);
                     break;
                 case ComponentType.Decomposer:
                     resourceStates[2] = activeState;
-                    generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
                     break;
             }
             PlayStateChangeSoundEffect(activeState);

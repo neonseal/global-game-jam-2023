@@ -109,6 +109,7 @@ public class ForestController : MonoBehaviour {
 
         // Apply Generation Consumption
         totalWater = AttemptDecrement(totalWater, generator.WaterConsumptionRate);
+        Debug.Log("GENERATOR CONSUMING WATER: " + generator.WaterConsumptionRate);
 
         // Check for Generator State Change
         if (lastTotalValue > 0 && totalWater <= 0) {
