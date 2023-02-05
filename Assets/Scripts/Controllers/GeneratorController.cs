@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForestComponent;
 using Audio;
+using UnityEngine.SceneManagement;
+
 
 namespace Generator {
     public enum SoundEffects {
@@ -28,6 +30,7 @@ namespace Generator {
         [SerializeField] private int waterConsumptionRate;
         private float lastOrganicRate = 0;
         [SerializeField] private int organicConsumptionRate;
+        [SerializeField] private int endGameScene = 2;
 
         [Header("Resource States")]
         // Dictionary <ResourceName, Active>
@@ -181,7 +184,7 @@ namespace Generator {
                 soundEffects[(int)SoundEffects.GeneratorIdle].Play();
                 audioController.SwapMusicTracks(MusicTracks.GameOver);
                 // Trigger game over
-
+                SceneManager.LoadScene(endGameScene);
             } else {
                 // Update Music
                 audioController.SwapMusicTracks((MusicTracks)failingCount);
