@@ -10,7 +10,7 @@ public class ForestController : MonoBehaviour {
     private GeneratorController generator;
 
     [SerializeField] private CounterHUD counterHUD;
-    
+
     [Header("Total Resource Counts")]
     private static float defaultResourceAmount = 2000.0f;
     [SerializeField] private float totalWater = defaultResourceAmount;
@@ -218,19 +218,43 @@ public class ForestController : MonoBehaviour {
         switch (type) {
             case ComponentType.Tree:
                 TreeComponent treeComponent = newComponent.AddComponent(typeof(TreeComponent)) as TreeComponent;
-                treeSupply.Add(treeComponent);
+
+                if (totalEnergy > treeComponent.energyBuildCost && totalOrganic > treeComponent.organicBuildCost) {
+                    totalEnergy = AttemptDecrement(totalEnergy, treeComponent.energyBuildCost);
+                    totalOrganic = AttemptDecrement(totalOrganic, treeComponent.organicBuildCost);
+
+                    treeSupply.Add(treeComponent);
+                }
                 break;
             case ComponentType.Sunflower:
                 SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
-                sunflowerSupply.Add(sunflowerComponent);
+
+                if (totalOrganic > sunflowerComponent.organicBuildCost && totalWater > sunflowerComponent.waterBuildCost) {
+                    totalOrganic = AttemptDecrement(totalOrganic, sunflowerComponent.organicBuildCost);
+                    totalWater = AttemptDecrement(totalWater, sunflowerComponent.waterBuildCost);
+
+                    sunflowerSupply.Add(sunflowerComponent);
+                }
                 break;
             case ComponentType.Mushroom:
                 MushroomComponent mushroomComponent = newComponent.AddComponent(typeof(MushroomComponent)) as MushroomComponent;
-                mushroomSupply.Add(mushroomComponent);
+
+                if (totalOrganic > mushroomComponent.organicBuildCost && totalWater > mushroomComponent.waterBuildCost && totalEnergy > mushroomComponent.energyBuildCost) {
+                    totalOrganic = AttemptDecrement(totalOrganic, mushroomComponent.organicBuildCost);
+                    totalWater = AttemptDecrement(totalWater, mushroomComponent.waterBuildCost);
+                    totalEnergy = AttemptDecrement(totalEnergy, mushroomComponent.energyBuildCost);
+
+                    mushroomSupply.Add(mushroomComponent);
+                }
                 break;
             case ComponentType.Decomposer:
                 DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
-                decomposerSupply.Add(decomposerComponent);
+
+                if (totalEnergy > decomposerComponent.energyBuildCost && totalWater > decomposerComponent.waterBuildCost) {
+                    totalWater = AttemptDecrement(totalWater, decomposerComponent.waterBuildCost);
+                    totalEnergy = AttemptDecrement(totalEnergy, decomposerComponent.energyBuildCost);
+                    decomposerSupply.Add(decomposerComponent);
+                }
                 break;
         }
     }
@@ -265,7 +289,7 @@ public class ForestController : MonoBehaviour {
                         sunflowerSupply.Remove(sunflowerSupply.LastOrDefault());
                         DestroyImmediate(sunflowerSupply.LastOrDefault());
                     }
-                }                
+                }
                 break;
             case ComponentType.Mushroom:
                 if (mushroomSupply.Count() > 0) {

@@ -15,8 +15,8 @@ public class TreeComponent : MonoBehaviour, IForestComponent
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
-        resourceGenerator.AmountPerCycle = 50.0f;
-        resourceGenerator.BaseAmountPerCycle = 50.0f;
+        resourceGenerator.AmountPerCycle = 52.0f;
+        resourceGenerator.BaseAmountPerCycle = 52.0f;
         health = maxHealth;
     }
 
