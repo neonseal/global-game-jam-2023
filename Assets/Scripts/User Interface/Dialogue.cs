@@ -42,7 +42,7 @@ public class Dialogue : MonoBehaviour
         if (index < sentences.Length && timer < duration)
         {
           // Increment the timer by the delta time
-          timer += Time.deltaTime;
+         // timer += Time.deltaTime;
         }
     }
 
@@ -68,7 +68,7 @@ public class Dialogue : MonoBehaviour
     void CheckInput()
     {
         // If the space key is pressed
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKeyDown)
         {
             // Call the NextLine function
             NextLine();
