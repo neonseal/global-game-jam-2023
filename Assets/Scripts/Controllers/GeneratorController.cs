@@ -20,9 +20,9 @@ namespace Generator {
         private static AudioSource[] soundEffects;
 
         [Header("Consumption Costs")]
-        [SerializeField] private float energyConsumptionRate = 20f;
-        [SerializeField] private float waterConsumptionRate = 20f;
-        [SerializeField] private float organicConsumptionRate = 20f;
+        [SerializeField] private float energyConsumptionRate = 75f;
+        [SerializeField] private float waterConsumptionRate = 100f;
+        [SerializeField] private float organicConsumptionRate = 50f;
 
         [Header("Resource States")]
         // Dictionary <ResourceName, Active>
@@ -33,6 +33,7 @@ namespace Generator {
             generatorHUD = gameObject.GetComponent<GeneratorHUD>();
             soundEffects = gameObject.GetComponents<AudioSource>();
             audioController = gameObject.GetComponentInChildren<AudioController>();
+
             // Set initial resource states for Water, Energy, Organic
             resourceStates = new bool[3] { true, true, true };
         }
@@ -106,6 +107,11 @@ namespace Generator {
             get { return organicConsumptionRate; }
             set { organicConsumptionRate = value; }
         }
+
+        public int FailingCount {
+            get { return failingCount; }
+        }
+
         #endregion
     }
 }
