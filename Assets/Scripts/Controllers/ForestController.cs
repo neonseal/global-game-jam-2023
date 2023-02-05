@@ -26,9 +26,9 @@ public class ForestController : MonoBehaviour {
 
     [Header("Resource Health")]
     [SerializeField] private float damageAmount = 10.0f;
-    [SerializeField] private TreeComponent lastTree;
-    [SerializeField] private SunflowerComponent lastSunflower;
-    [SerializeField] private DecomposerComponent lastDecomposer;
+    [SerializeField] private float lastTreeHealth;
+    [SerializeField] private float lastSunflowerHealth;
+    [SerializeField] private float lastDecomposerHealth;
 
     [Header("Timer")]
     private float timer;
@@ -47,9 +47,9 @@ public class ForestController : MonoBehaviour {
     }
 
     private void Update() {
-        lastTree = treeSupply.LastOrDefault();
-        lastSunflower = sunflowerSupply.LastOrDefault();
-        lastDecomposer = decomposerSupply.LastOrDefault();
+        lastTreeHealth = treeSupply.Count() > 0 ? treeSupply.LastOrDefault().health : 0.0f;
+        lastSunflowerHealth = sunflowerSupply.Count() > 0 ? sunflowerSupply.LastOrDefault().health : 0.0f;
+        lastDecomposerHealth = decomposerSupply.Count() > 0 ? decomposerSupply.LastOrDefault().health : 0.0f;
 
         timer -= Time.fixedDeltaTime;
 
@@ -133,6 +133,9 @@ public class ForestController : MonoBehaviour {
         // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
             energyGenerationRate += sunflower.GetCurrentGenerationRate();
+            if (energyGenerationRate < 40.0f) {
+                Debug.Log("DAMAGED SUNFLOWER");
+            }
         }
         totalEnergy += energyGenerationRate;
 
@@ -220,7 +223,6 @@ public class ForestController : MonoBehaviour {
             case ComponentType.Decomposer:
                 DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
                 decomposerSupply.Add(decomposerComponent);
-
                 break;
         }
     }
@@ -230,21 +232,22 @@ public class ForestController : MonoBehaviour {
             case ComponentType.Tree:
                 if (treeSupply.Count() > 0) {
                     TreeComponent tree = treeSupply.LastOrDefault();
-                    tree.health -= damageAmount;
+                    tree.health = AttemptDecrement(tree.health, damageAmount);
 
                     if (tree.health > 0) {
                         // Apply damage to most recently placed component
                         treeSupply.LastOrDefault().health = tree.health;
                     } else {
-                        // Kill most recently placed component
+                        // Kill most recently placed 
                         treeSupply.Remove(treeSupply.LastOrDefault());
+                        DestroyImmediate(treeSupply[0]);
                     }
                 }
                 break;
             case ComponentType.Sunflower:
                 if (sunflowerSupply.Count() > 0) {
                     SunflowerComponent sunflower = sunflowerSupply.LastOrDefault();
-                    sunflower.health -= damageAmount;
+                    sunflower.health = AttemptDecrement(sunflower.health, damageAmount);
 
                     if (sunflower.health > 0) {
                         // Apply damage to most recently placed component
@@ -252,13 +255,14 @@ public class ForestController : MonoBehaviour {
                     } else {
                         // Kill most recently placed component
                         sunflowerSupply.Remove(sunflowerSupply.LastOrDefault());
+                        DestroyImmediate(sunflower);
                     }
                 }                
                 break;
             case ComponentType.Mushroom:
                 if (mushroomSupply.Count() > 0) {
                     MushroomComponent mushroom = mushroomSupply.LastOrDefault();
-                    mushroom.health -= damageAmount;
+                    mushroom.health = AttemptDecrement(mushroom.health, damageAmount);
 
                     if (mushroom.health > 0) {
                         // Apply damage to most recently placed component
@@ -266,13 +270,15 @@ public class ForestController : MonoBehaviour {
                     } else {
                         // Kill most recently placed component
                         mushroomSupply.Remove(mushroomSupply.LastOrDefault());
+                        DestroyImmediate(sunflowerSupply.LastOrDefault());
                     }
                 }
                 break;
             case ComponentType.Decomposer:
                 if (decomposerSupply.Count() > 0) {
                     DecomposerComponent decomposer = decomposerSupply.LastOrDefault();
-                    decomposer.health -= damageAmount;
+                    decomposer.health = AttemptDecrement(decomposer.health, damageAmount);
+
 
                     if (decomposer.health > 0) {
                         // Apply damage to most recently placed component
@@ -280,6 +286,7 @@ public class ForestController : MonoBehaviour {
                     } else {
                         // Kill most recently placed component
                         decomposerSupply.Remove(decomposerSupply.LastOrDefault());
+                        DestroyImmediate(decomposerSupply.LastOrDefault());
                     }
                 }
                 break;
