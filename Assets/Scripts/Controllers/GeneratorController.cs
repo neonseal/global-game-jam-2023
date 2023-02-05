@@ -22,12 +22,12 @@ namespace Generator {
         [Header("Consumption Costs")]
         [SerializeField] private float minConsumptionRate = 100.0f;
         [SerializeField] private float maxConsumptionRate = 1000.0f;
-        private float lastEnergyRate = 0.0f;
-        [SerializeField] private float energyConsumptionRate;
-        private float lastWaterRate = 0.0f;
-        [SerializeField] private float waterConsumptionRate;
-        private float lastOrganicRate = 0.0f;
-        [SerializeField] private float organicConsumptionRate;
+        private int lastEnergyRate = 0;
+        [SerializeField] private int energyConsumptionRate;
+        private float lastWaterRate = 0;
+        [SerializeField] private int waterConsumptionRate;
+        private float lastOrganicRate = 0;
+        [SerializeField] private int organicConsumptionRate;
 
         [Header("Resource States")]
         // Dictionary <ResourceName, Active>
@@ -45,13 +45,13 @@ namespace Generator {
 
             timer = generatorTimerReset;
 
-            energyConsumptionRate = 2.0f * minConsumptionRate;
+            energyConsumptionRate = (int)(2.0f * minConsumptionRate);
             lastEnergyRate = energyConsumptionRate;
 
-            waterConsumptionRate =  1.5f * minConsumptionRate;
+            waterConsumptionRate = (int)(1.5f * minConsumptionRate);
             lastWaterRate = waterConsumptionRate;
 
-            organicConsumptionRate = minConsumptionRate;
+            organicConsumptionRate = (int)minConsumptionRate;
             lastOrganicRate = organicConsumptionRate;
 
             // Set initial resource states for Water, Energy, Organic
@@ -68,17 +68,17 @@ namespace Generator {
             timer -= Time.deltaTime;
 
             if (timer <= 0.0f) {
-                energyConsumptionRate = RandomizeConsumptionRate(ComponentType.Sunflower);
-                waterConsumptionRate = RandomizeConsumptionRate(ComponentType.Tree);
-                organicConsumptionRate = RandomizeConsumptionRate(ComponentType.Decomposer);
+                RandomizeConsumptionRate(ComponentType.Sunflower);
+                RandomizeConsumptionRate(ComponentType.Tree);
+                RandomizeConsumptionRate(ComponentType.Decomposer);
 
+                Debug.Log("Updated water: " + waterConsumptionRate);
                 timer = generatorTimerReset;
             }
         }
 
-        private float RandomizeConsumptionRate(ComponentType type) {
-            Debug.Log("RANDOMIZING RATE: " + type); ;
-            float newRate = 0.0f;
+        private void RandomizeConsumptionRate(ComponentType type) {
+
             float floor = minConsumptionRate;
             // Randomly decide if we push high if last value was low
             // 2 out of 3 chance of adjusting higher
@@ -94,7 +94,7 @@ namespace Generator {
                         floor *= 2;
                     }
 
-                    energyConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    energyConsumptionRate = (int)Random.Range(floor, maxConsumptionRate);
                     lastEnergyRate = energyConsumptionRate;
 
                     // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
@@ -106,10 +106,11 @@ namespace Generator {
                     }
 
                     if (adjustHigher) {
+                        Debug.Log("Adjusting Floor Higher: " + floor);
                         floor *= 2;
                     }
 
-                    waterConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    waterConsumptionRate = (int)Random.Range(floor, maxConsumptionRate);
                     lastEnergyRate = waterConsumptionRate;
 
                     // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
@@ -124,15 +125,13 @@ namespace Generator {
                         floor *= 2;
                     }
 
-                    organicConsumptionRate = Random.Range(floor, maxConsumptionRate);
+                    organicConsumptionRate = (int)Random.Range(floor, maxConsumptionRate);
                     lastOrganicRate = organicConsumptionRate;
 
                     // Set Generator HUD to reflect intensity of consumption as a percentage of max rate
                     generatorHUD.SetResourceState(ComponentType.Decomposer, organicConsumptionRate / maxConsumptionRate);
                     break;
             }
-
-            return newRate;
         }
 
         #region Resource State Management
@@ -183,17 +182,17 @@ namespace Generator {
         #endregion
 
         #region Getters and Setters
-        public float EnergyConsumptionRate {
+        public int EnergyConsumptionRate {
             get { return energyConsumptionRate; }
             set { energyConsumptionRate = value; }
         }
 
-        public float WaterConsumptionRate {
+        public int WaterConsumptionRate {
             get { return waterConsumptionRate; }
             set { waterConsumptionRate = value; }
         }
 
-        public float OrganicConsumptionRate {
+        public int OrganicConsumptionRate {
             get { return organicConsumptionRate; }
             set { organicConsumptionRate = value; }
         }

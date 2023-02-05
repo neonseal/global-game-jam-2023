@@ -7,7 +7,7 @@ using Generator;
 using System.Linq;
 
 public class ForestController : MonoBehaviour {
-    private GeneratorController generator;
+    private static GeneratorController generator;
     private static CounterHUD counterHUD;
 
     [Header("Total Resource Counts")]
@@ -31,7 +31,7 @@ public class ForestController : MonoBehaviour {
     [SerializeField] private float timerResetValue = 5.0f;
 
     private void Awake() {
-        generator = new GeneratorController();
+        generator = gameObject.GetComponentInChildren<GeneratorController>();
         counterHUD = gameObject.GetComponentInChildren<CounterHUD>();
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
@@ -41,6 +41,8 @@ public class ForestController : MonoBehaviour {
         sunflowerSupply = new List<SunflowerComponent>();
         decomposerSupply = new List<DecomposerComponent>();
         mushroomSupply = new List<MushroomComponent>();
+
+
     }
 
     private void Update() {
@@ -109,7 +111,6 @@ public class ForestController : MonoBehaviour {
 
         // Apply Generation Consumption
         totalWater = AttemptDecrement(totalWater, generator.WaterConsumptionRate);
-        Debug.Log("GENERATOR CONSUMING WATER: " + generator.WaterConsumptionRate);
 
         // Check for Generator State Change
         if (lastTotalValue > 0 && totalWater <= 0) {
