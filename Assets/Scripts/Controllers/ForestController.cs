@@ -26,9 +26,6 @@ public class ForestController : MonoBehaviour {
 
     [Header("Resource Health")]
     [SerializeField] private float damageAmount = 10.0f;
-    [SerializeField] private float lastTreeHealth;
-    [SerializeField] private float lastSunflowerHealth;
-    [SerializeField] private float lastDecomposerHealth;
 
     [Header("Timer")]
     private float timer;
@@ -47,10 +44,6 @@ public class ForestController : MonoBehaviour {
     }
 
     private void Update() {
-        lastTreeHealth = treeSupply.Count() > 0 ? treeSupply.LastOrDefault().health : 0.0f;
-        lastSunflowerHealth = sunflowerSupply.Count() > 0 ? sunflowerSupply.LastOrDefault().health : 0.0f;
-        lastDecomposerHealth = decomposerSupply.Count() > 0 ? decomposerSupply.LastOrDefault().health : 0.0f;
-
         timer -= Time.fixedDeltaTime;
 
         UpdateForestMaintenanceCosts();
