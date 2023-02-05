@@ -14,8 +14,8 @@ public class MushroomComponent : MonoBehaviour, IForestComponent {
 
     private void Awake() {
         resourceGenerator = new ResourceGenerator();
-        resourceGenerator.AmountPerCycle = 10.0f;
-        resourceGenerator.BaseAmountPerCycle = 10.0f;
+        resourceGenerator.AmountPerCycle = 2.0f;
+        resourceGenerator.BaseAmountPerCycle = 25.0f;
         health = maxHealth;
     }
 
