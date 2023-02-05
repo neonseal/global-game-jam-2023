@@ -39,7 +39,7 @@ public class Dialogue : MonoBehaviour
         if (index < sentences.Length && timer < duration)
         {
           // Increment the timer by the delta time
-          timer += Time.deltaTime;
+          //timer += Time.deltaTime;
           Debug.Log("Timer: " + timer);
         }
     }
@@ -89,5 +89,12 @@ public class Dialogue : MonoBehaviour
             // Reset the timer
             timer = 0f;
         }
+        else
+        {
+            // If there are no more sentences, deactivate the game object if the timer has reached the duration
+            gameObject.SetActive(false);
+            Debug.Log("Dialogue deactivated");
+        }
+        
     }
 }
