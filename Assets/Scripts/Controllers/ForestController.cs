@@ -20,8 +20,15 @@ public class ForestController : MonoBehaviour {
     private static List<MushroomComponent> mushroomSupply;
     private float treeCost, sunflowerCost, decomposerCost = 0.0f;
 
+    [SerializeField] private float totalCost = 0.0f;
+    [SerializeField] private int amountOfSunflowers = 0;
+    [SerializeField] private int amountOfTree = 0;
+    [SerializeField] private int amountOfDecomposters = 0;
+    
+
     [Header("Timer")]
     private float timer;
+    [SerializeField] private float damage_timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
     [Header("Resource Tracking")]
@@ -32,6 +39,7 @@ public class ForestController : MonoBehaviour {
         generator = new GeneratorController();
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
         timer = timerResetValue;
+        damage_timer = timerResetValue;
 
         // Initialize Forest Component Collecitons
         treeSupply = new List<TreeComponent>();
@@ -59,6 +67,7 @@ public class ForestController : MonoBehaviour {
 
             timer = timerResetValue;
         }
+
     }
 
     private void UpdateForestMaintenanceCosts() {
@@ -78,12 +87,30 @@ public class ForestController : MonoBehaviour {
         // Calculate total resource resource generation power
         foreach (TreeComponent tree in treeSupply) {
             waterGenerationRate += tree.GetCurrentGenerationRate();
+
+            amountOfTree += 1;
         }
         totalWater += waterGenerationRate;
         
         // Apply Forest Maintenance Costs
         if (sunflowerCost > 0 || decomposerCost > 0) {
-            totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
+            if( totalWater < (sunflowerCost + decomposerCost) / 2  )
+            {
+                // Goes through list of Trees to apply damage globally
+                foreach (TreeComponent tree in treeSupply) {
+                    difference = totalWater - (sunflowerCost + decomposerCost) / 2;
+
+                    // global applied damage = 
+                    // div(difference+1,amountOfTree)
+
+                    dmg_each = (difference+1)/amountOfTree;
+
+                    tree.ApplyDamage(dmg_each);
+                }
+            }
+            totalCost = (sunflowerCost + decomposerCost) / 2;
+            
+            totalWater = AttemptDecrement(totalWater, totalCost);
         }
 
         // Apply Generation Consumption
@@ -109,12 +136,32 @@ public class ForestController : MonoBehaviour {
         // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
             energyGenerationRate += sunflower.GetCurrentGenerationRate();
+
+            // used to calculate global-applied damage
+            amountOfSunflowers += 1;
         }
         totalEnergy += energyGenerationRate;
 
         // Apply Forest Maintenance Costs
         if (treeCost > 0 || decomposerCost > 0) {
-            totalEnergy = AttemptDecrement(totalEnergy, (treeCost + decomposerCost) / 2);
+            if( totalEnergy < (treeCost + decomposerCost) / 2)
+            {
+                // Goes through list of sunflowers to apply damage globally
+                foreach (SunflowerComponent sunflower in sunflowerSupply) {
+                    difference = totalEnergy - (treeCost + decomposerCost) / 2;
+
+                    // global applied damage = 
+                    // div(difference+1,amountOfSunflowers)
+
+                    dmg_each = (difference+1)/amountOfSunflowers;
+
+                    sunflower.ApplyDamage(dmg_each);
+                }
+            }
+            totalCost = (treeCost + decomposerCost) / 2;
+
+            totalEnergy = AttemptDecrement(totalEnergy, totalCost);
+
         }
 
         // Apply Generation Consumption
@@ -140,12 +187,30 @@ public class ForestController : MonoBehaviour {
         // Calculate total resource resource generation power
         foreach (DecomposerComponent decomposer in decomposerSupply) {
             organicGenerationRate += decomposer.GetCurrentGenerationRate();
+
+            amountOfDecomposters += 1;
         }
         totalOrganic += organicGenerationRate;
 
         // Apply Forest Maintenance Costs
         if (treeCost > 0 || sunflowerCost > 0) {
-            totalOrganic = AttemptDecrement(totalOrganic, (treeCost + sunflowerCost) / 2);
+            if( totalOrganic < (treeCost + sunflowerCost) / 2)
+            {
+                // Goes through list of sunflowers to apply damage globally
+                foreach (DecomposerComponent decomposer in decomposerSupply) {
+                    difference = totalOrganic - (treeCost + sunflowerCost) / 2;
+
+                    // global applied damage = 
+                    // div(difference+1,amountOfDecomposters)
+
+                    dmg_each = (difference+1)/amountOfDecomposters;
+
+                    decomposer.ApplyDamage(dmg_each);
+                }
+            }
+            totalCost = (treeCost + sunflowerCost) / 2;
+
+            totalOrganic = AttemptDecrement(totalOrganic, totalCost);
         }
 
         // Apply Generation Consumption
