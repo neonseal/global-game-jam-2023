@@ -59,7 +59,7 @@ public class Dialogue : MonoBehaviour
     void CheckInput()
     {
         // If the space key is pressed
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKeyDown)
         {
             // Call the NextLine function
             NextLine();
