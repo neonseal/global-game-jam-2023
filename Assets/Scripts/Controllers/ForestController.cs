@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForestComponent;
-using Generator; 
+using Generator;
+using System.Linq;
 
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;
 
     [Header("Total Resource Counts")]
-    private static float defaultResourceAmount = 100.0f;
+    private static float defaultResourceAmount = 1000.0f;
     [SerializeField] private float totalWater = defaultResourceAmount;
     [SerializeField] private float totalEnergy = defaultResourceAmount;
     [SerializeField] private float totalOrganic = defaultResourceAmount;
@@ -21,12 +22,18 @@ public class ForestController : MonoBehaviour {
     private static List<MushroomComponent> mushroomSupply;
     private float treeCost, sunflowerCost, decomposerCost = 0.0f;
 
+    [Header("Resource Health")]
+    [SerializeField] private float damageAmount = 10.0f;
+    [SerializeField] private TreeComponent lastTree;
+    [SerializeField] private SunflowerComponent lastSunflower;
+    [SerializeField] private DecomposerComponent lastDecomposer;
+
     [Header("Timer")]
     private float timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
     [Header("Resource Tracking")]
-    [SerializeField] private List<string> activeSystems;
+    private List<string> activeSystems;
     [SerializeField] private CounterHUD counterHUD;
 
     private void Awake() {
@@ -48,6 +55,10 @@ public class ForestController : MonoBehaviour {
     }
 
     private void Update() {
+        lastTree = treeSupply.LastOrDefault();
+        lastSunflower = sunflowerSupply.LastOrDefault();
+        lastDecomposer = decomposerSupply.LastOrDefault();
+
         timer -= Time.fixedDeltaTime;
 
         UpdateForestMaintenanceCosts();
@@ -57,6 +68,26 @@ public class ForestController : MonoBehaviour {
             UpdateEnergyResourceSupply();
             UpdateOrganicResourceSupply();
             UpdateCounterHUD();
+
+            // Apply damage
+            if (generator.FailingCount > 0) {
+                // Check which resources are failing
+                if (totalWater <= 0) {
+                    // Damage Sunflowers and Decomposers
+                    DamageResourceSupply(ComponentType.Sunflower);
+                    DamageResourceSupply(ComponentType.Decomposer);
+                } else if (totalOrganic <= 0) {
+                    // Damage trees and mushrooms
+                    DamageResourceSupply(ComponentType.Tree);
+                    DamageResourceSupply(ComponentType.Mushroom);
+
+                } else if (totalEnergy <= 0) {
+                    // Damage trees and decomposers
+                    DamageResourceSupply(ComponentType.Tree);
+                    DamageResourceSupply(ComponentType.Sunflower);
+
+                }
+            }
 
             timer = timerResetValue;
         }
@@ -81,7 +112,7 @@ public class ForestController : MonoBehaviour {
             waterGenerationRate += tree.GetCurrentGenerationRate();
         }
         totalWater += waterGenerationRate;
-        
+
         // Apply Forest Maintenance Costs
         if (sunflowerCost > 0 || decomposerCost > 0) {
             totalWater = AttemptDecrement(totalWater, (sunflowerCost + decomposerCost) / 2);
@@ -198,6 +229,67 @@ public class ForestController : MonoBehaviour {
                 DecomposerComponent decomposerComponent = newComponent.AddComponent(typeof(DecomposerComponent)) as DecomposerComponent;
                 decomposerSupply.Add(decomposerComponent);
 
+                break;
+        }
+    }
+
+    public void DamageResourceSupply(ComponentType type) {
+        switch (type) {
+            case ComponentType.Tree:
+                if (treeSupply.Count() > 0) {
+                    TreeComponent tree = treeSupply.LastOrDefault();
+                    tree.health -= damageAmount;
+
+                    if (tree.health > 0) {
+                        // Apply damage to most recently placed component
+                        treeSupply.LastOrDefault().health = tree.health;
+                    } else {
+                        // Kill most recently placed component
+                        treeSupply.Remove(treeSupply.LastOrDefault());
+                    }
+                }
+                break;
+            case ComponentType.Sunflower:
+                if (sunflowerSupply.Count() > 0) {
+                    SunflowerComponent sunflower = sunflowerSupply.LastOrDefault();
+                    sunflower.health -= damageAmount;
+
+                    if (sunflower.health > 0) {
+                        // Apply damage to most recently placed component
+                        sunflowerSupply.LastOrDefault().health = sunflower.health;
+                    } else {
+                        // Kill most recently placed component
+                        sunflowerSupply.Remove(sunflowerSupply.LastOrDefault());
+                    }
+                }                
+                break;
+            case ComponentType.Mushroom:
+                if (mushroomSupply.Count() > 0) {
+                    MushroomComponent mushroom = mushroomSupply.LastOrDefault();
+                    mushroom.health -= damageAmount;
+
+                    if (mushroom.health > 0) {
+                        // Apply damage to most recently placed component
+                        mushroomSupply.LastOrDefault().health = mushroom.health;
+                    } else {
+                        // Kill most recently placed component
+                        mushroomSupply.Remove(mushroomSupply.LastOrDefault());
+                    }
+                }
+                break;
+            case ComponentType.Decomposer:
+                if (decomposerSupply.Count() > 0) {
+                    DecomposerComponent decomposer = decomposerSupply.LastOrDefault();
+                    decomposer.health -= damageAmount;
+
+                    if (decomposer.health > 0) {
+                        // Apply damage to most recently placed component
+                        decomposerSupply.LastOrDefault().health = decomposer.health;
+                    } else {
+                        // Kill most recently placed component
+                        decomposerSupply.Remove(decomposerSupply.LastOrDefault());
+                    }
+                }
                 break;
         }
     }
