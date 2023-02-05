@@ -64,7 +64,7 @@ namespace Generator {
                 audioController.PlayMusicTrack(MusicTracks.GameOver);
             } else {
                 // Update Music
-                Debug.Log(audioController.GetMusicTrack((MusicTracks)failingCount));
+                audioController.PlayMusicTrack((MusicTracks)failingCount);
             }
         }
 
