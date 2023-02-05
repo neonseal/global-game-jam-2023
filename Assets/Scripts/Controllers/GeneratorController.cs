@@ -61,10 +61,10 @@ namespace Generator {
             UpdateFailingCount();
 
             if (failingCount == 3) {
-                audioController.PlayMusicTrack(MusicTracks.GameOver);
+                audioController.SwapMusicTracks(MusicTracks.GameOver);
             } else {
                 // Update Music
-                audioController.PlayMusicTrack((MusicTracks)failingCount);
+                audioController.SwapMusicTracks((MusicTracks)failingCount);
             }
         }
 
