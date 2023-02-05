@@ -29,7 +29,6 @@ namespace Audio {
 
         public void SwapMusicTracks(MusicTracks track) {
             StopAllCoroutines();
-            currentlyPlaying = GetCurrentlyPlaying();
             int trackIndex = (int)track;
 
             upNext = musicTracks[trackIndex];
@@ -48,6 +47,7 @@ namespace Audio {
                 yield return null;
             }
             currentlyPlaying.Stop();
+            currentlyPlaying = upNext;
         }
 
     }
