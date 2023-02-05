@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForestComponent;
+using Generator; 
 
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;
@@ -184,7 +185,6 @@ public class ForestController : MonoBehaviour {
             case ComponentType.Tree:
                 TreeComponent treeComponent = newComponent.AddComponent(typeof(TreeComponent)) as TreeComponent;
                 treeSupply.Add(treeComponent);
-                Debug.Log(treeSupply.Count);
                 break;
             case ComponentType.Sunflower:
                 SunflowerComponent sunflowerComponent = newComponent.AddComponent(typeof(SunflowerComponent)) as SunflowerComponent;
