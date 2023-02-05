@@ -21,6 +21,8 @@ public class Dialogue : MonoBehaviour
     // A timer used to keep track of the elapsed time
     private float timer;
 
+    public bool triggerCloseDialog = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,12 +37,20 @@ public class Dialogue : MonoBehaviour
     {
         CheckTimer();
         CheckInput();
+        CheckTriggerInput();
         
         if (index < sentences.Length && timer < duration)
         {
           // Increment the timer by the delta time
           timer += Time.deltaTime;
-          Debug.Log("Timer: " + timer);
+        }
+    }
+
+    void CheckTriggerInput()
+    {
+        if(triggerCloseDialog == true)
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -50,8 +60,7 @@ public class Dialogue : MonoBehaviour
         if (timer >= duration)
         {
             // Deactivate the game object
-            gameObject.SetActive(false);
-            Debug.Log("Dialogue deactivated");
+            triggerCloseDialog = true;
         }
     }
 
@@ -84,6 +93,10 @@ public class Dialogue : MonoBehaviour
         {
             // Increment the index
             index++;
+            if(index >= sentences.Length - 1)
+            {
+                triggerCloseDialog = true;
+            }
             // Update the text component with the new sentence
             textComponent.text = sentences[index];
             // Reset the timer
