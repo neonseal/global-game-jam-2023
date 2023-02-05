@@ -22,10 +22,12 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
             GameObject[] items = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().inventoryItems;
             if (items != null) {   
                 GameObject selectedTile = cursorManager.CalculateRayCastHitGameObject();
-                GameObject selectRandom = GetRandomFromInventorySlow(items);
-                GameObject newComponent = PlaceGameObject(selectRandom, selectedTile.transform.position);
-                PlaySoundEffect(newComponent);
-                forestController.AddOrganicComponent(newComponent, ConvertToComponentType(items[0].tag));
+                if (selectedTile != null) {
+                    GameObject selectRandom = GetRandomFromInventorySlow(items);
+                    GameObject newComponent = PlaceGameObject(selectRandom, selectedTile.transform.position);
+                    PlaySoundEffect(newComponent);
+                    forestController.AddOrganicComponent(newComponent, ConvertToComponentType(items[0].tag));
+                }
             }
         }
     }
@@ -41,7 +43,7 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
     private GameObject PlaceGameObject(GameObject placedItem, Vector3 tilePosition) {
         Vector3 itemPosition = new Vector3(tilePosition.x, tilePosition.y + .35f, tilePosition.z);
         Transform parentTransform = GameObject.FindGameObjectWithTag("ComponentLayer").transform;
-        Quaternion rotation = new Quaternion(60, 180, 270, 0);
+        Quaternion rotation = new Quaternion(119.5f, 175, 300, 0);
 
         return Instantiate(placedItem, itemPosition, rotation, parentTransform);
     }

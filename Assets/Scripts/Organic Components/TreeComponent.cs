@@ -5,7 +5,7 @@ using ForestComponent;
 
 public class TreeComponent : MonoBehaviour, IForestComponent
 {
-    private ResourceGenerator resourceGenerator;
+    [SerializeField] private ResourceGenerator resourceGenerator;
     [SerializeField] public float maintenanceCost { get; set; } = 10f;
     [SerializeField] public float energyBuildCost { get; set; } = 5f;
     [SerializeField] public float waterBuildCost { get; set; } = 0f;
