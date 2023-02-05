@@ -181,6 +181,7 @@ namespace Generator {
                 soundEffects[(int)SoundEffects.GeneratorIdle].Play();
                 audioController.SwapMusicTracks(MusicTracks.GameOver);
                 // Trigger game over
+
             } else {
                 // Update Music
                 audioController.SwapMusicTracks((MusicTracks)failingCount);
