@@ -9,8 +9,10 @@ using System.Linq;
 public class ForestController : MonoBehaviour {
     private GeneratorController generator;
 
+    [SerializeField] private CounterHUD counterHUD;
+    
     [Header("Total Resource Counts")]
-    private static float defaultResourceAmount = 1000.0f;
+    private static float defaultResourceAmount = 2000.0f;
     [SerializeField] private float totalWater = defaultResourceAmount;
     [SerializeField] private float totalEnergy = defaultResourceAmount;
     [SerializeField] private float totalOrganic = defaultResourceAmount;
@@ -32,10 +34,6 @@ public class ForestController : MonoBehaviour {
     private float timer;
     [SerializeField] private float timerResetValue = 5.0f;
 
-    [Header("Resource Tracking")]
-    private List<string> activeSystems;
-    [SerializeField] private CounterHUD counterHUD;
-
     private void Awake() {
         generator = new GeneratorController();
         counterHUD.energyCount = counterHUD.waterCount = counterHUD.organicCount = defaultResourceAmount;
@@ -46,12 +44,6 @@ public class ForestController : MonoBehaviour {
         sunflowerSupply = new List<SunflowerComponent>();
         decomposerSupply = new List<DecomposerComponent>();
         mushroomSupply = new List<MushroomComponent>();
-
-        // Set up Resource State Traacker
-        activeSystems = new List<string>();
-        activeSystems.Add("Water");
-        activeSystems.Add("Energy");
-        activeSystems.Add("Organic");
     }
 
     private void Update() {

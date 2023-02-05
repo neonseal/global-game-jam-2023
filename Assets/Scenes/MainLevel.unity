@@ -4806,15 +4806,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b081524beff78b943b3f2f75214f3a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalWater: 100
-  totalEnergy: 160
-  totalOrganic: 260
+  counterHUD: {fileID: 1849869432}
+  totalWater: 2000
+  totalEnergy: 2000
+  totalOrganic: 2000
   damageAmount: 10
   lastTree: {fileID: 0}
   lastSunflower: {fileID: 0}
   lastDecomposer: {fileID: 0}
   timerResetValue: 5
-  counterHUD: {fileID: 1849869432}
 --- !u!1 &768472859
 GameObject:
   m_ObjectHideFlags: 0
