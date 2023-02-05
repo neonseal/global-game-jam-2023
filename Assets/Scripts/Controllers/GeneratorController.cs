@@ -9,7 +9,7 @@ public class GeneratorController : MonoBehaviour {
 
     [Header("Audio Controller")]
     [SerializeField] AudioController audioController;
-    private AudioController[] audioTracks;
+    private AudioSource[] soundEffects;
 
     [Header("Consumption Costs")]
     [SerializeField] private float energyConsumptionRate = 20f;
@@ -19,18 +19,18 @@ public class GeneratorController : MonoBehaviour {
     [Header("Resource States")]
     // Dictionary <ResourceName, Active>
     private static bool[] resourceStates;
-
+    private int failingCount;
 
     private void Awake() {
         generatorHUD = gameObject.GetComponent<GeneratorHUD>();
-       /* audioController = new AudioController();
-        audioTracks = audioController.GetComponents<AudioController>();*/
+        soundEffects = gameObject.GetComponents<AudioSource>();
+        audioController = new AudioController();
         // Set initial resource states for Water, Energy, Organic
         resourceStates = new bool[3] { true, true, true };
     }
 
     private void Update() {
-        int failingCount = resourceStates.Count(state => state == false);
+        UpdateFailingCount();
     }
 
     #region Resource State Management
@@ -49,9 +49,18 @@ public class GeneratorController : MonoBehaviour {
                 generatorHUD.SetResourceState(ComponentType.Decomposer, activeState);
                 break;
         }
+        UpdateFailingCount();
+
+        if (failingCount == 3) {
+            //  Trigger Game Over
+        } else {
+            // Update Music
+        }
     }
 
-
+    private void UpdateFailingCount() {
+        failingCount = resourceStates.Count(state => state == false);
+    }
     #endregion
 
     #region Getters and Setters

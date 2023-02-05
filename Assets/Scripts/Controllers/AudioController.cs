@@ -1,18 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class AudioController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private AudioSource[] musicTracks;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void Awake() {
+        musicTracks = gameObject.GetComponents<AudioSource>();
+        Debug.Log(musicTracks.Count()); 
     }
 }
