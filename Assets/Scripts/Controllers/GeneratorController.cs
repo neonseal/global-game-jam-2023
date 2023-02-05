@@ -7,7 +7,7 @@ using Audio;
 
 namespace Generator {
     public enum SoundEffects {
-        DecreaseState, 
+        DecreaseState,
         IncreaseState,
         GeneratorIdle
     }
@@ -16,8 +16,8 @@ namespace Generator {
         private static GeneratorHUD generatorHUD;
 
         [Header("Audio Controller")]
-        private AudioController audioController;
-        private AudioSource[] soundEffects;
+        private static AudioController audioController;
+        private static AudioSource[] soundEffects;
 
         [Header("Consumption Costs")]
         [SerializeField] private float energyConsumptionRate = 20f;
@@ -64,17 +64,25 @@ namespace Generator {
                 audioController.PlayMusicTrack(MusicTracks.GameOver);
             } else {
                 // Update Music
-                audioController.PlayMusicTrack((MusicTracks)failingCount);
+                Debug.Log(audioController.GetMusicTrack((MusicTracks)failingCount));
             }
         }
 
         private void PlayStateChangeSoundEffect(bool activating) {
+            AudioSource effect;
+            int effectIndex;
+
             if (activating) {
-                soundEffects[(int)SoundEffects.IncreaseState].Play();
+                effectIndex = (int)SoundEffects.IncreaseState;
+                effect = soundEffects[effectIndex] as AudioSource;
+                effect.Play();
             } else {
-                soundEffects[(int)SoundEffects.DecreaseState].Play();
+                effectIndex = (int)SoundEffects.DecreaseState;
+                effect = soundEffects[effectIndex] as AudioSource;
+                effect.Play();
             }
-    }
+
+        }
 
         private void UpdateFailingCount() {
             failingCount = resourceStates.Count(state => state == false);

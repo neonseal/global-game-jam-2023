@@ -12,7 +12,7 @@ namespace Audio {
     }
 
     public class AudioController : MonoBehaviour {
-        private AudioSource[] musicTracks;
+        private static AudioSource[] musicTracks;
         private AudioSource currentlyPlaying;
         private AudioSource upNext;
 
@@ -25,6 +25,14 @@ namespace Audio {
 
         public void PlayMusicTrack(MusicTracks track) {
 
+        }
+
+        public AudioSource GetMusicTrack(MusicTracks track) {
+            if (musicTracks[(int)track]) {
+                return musicTracks[(int)track];
+            }
+
+            return null;
         }
     }
 }
