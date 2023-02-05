@@ -3,12 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using ForestComponent;
+using Audio;
 
 public class GeneratorController : MonoBehaviour {
     private static GeneratorHUD generatorHUD;
 
     [Header("Audio Controller")]
-    [SerializeField] AudioController audioController;
+    [SerializeField] private AudioController audioController;
     private AudioSource[] soundEffects;
 
     [Header("Consumption Costs")]
@@ -24,7 +25,10 @@ public class GeneratorController : MonoBehaviour {
     private void Awake() {
         generatorHUD = gameObject.GetComponent<GeneratorHUD>();
         soundEffects = gameObject.GetComponents<AudioSource>();
-        audioController = new AudioController();
+       /* audioController = gameObject.GetComponent<AudioController>();
+        if (audioController != null) {
+            Debug.Log("FOUND AUDIO CONTROLLER");
+        }*/
         // Set initial resource states for Water, Energy, Organic
         resourceStates = new bool[3] { true, true, true };
     }
@@ -52,9 +56,10 @@ public class GeneratorController : MonoBehaviour {
         UpdateFailingCount();
 
         if (failingCount == 3) {
-            //  Trigger Game Over
+            audioController.PlayMusicTrack(MusicTracks.GameOver);
         } else {
             // Update Music
+            audioController.PlayMusicTrack((MusicTracks)failingCount);
         }
     }
 
