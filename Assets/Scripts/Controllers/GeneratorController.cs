@@ -68,11 +68,24 @@ namespace Generator {
             timer -= Time.deltaTime;
 
             if (timer <= 0.0f) {
-                RandomizeConsumptionRate(ComponentType.Sunflower);
-                RandomizeConsumptionRate(ComponentType.Tree);
-                RandomizeConsumptionRate(ComponentType.Decomposer);
+                if (resourceStates[0]) {
+                    RandomizeConsumptionRate(ComponentType.Tree);
+                } else {
+                    generatorHUD.SetResourceState(ComponentType.Tree, 0);
+                }
 
-                Debug.Log("Updated water: " + waterConsumptionRate);
+                if (resourceStates[1]) {
+                    RandomizeConsumptionRate(ComponentType.Sunflower);
+                } else {
+                    generatorHUD.SetResourceState(ComponentType.Sunflower, 0);
+                }
+
+                if (resourceStates[2]) {
+                    RandomizeConsumptionRate(ComponentType.Decomposer);
+                } else {
+                    generatorHUD.SetResourceState(ComponentType.Decomposer, 0);
+                }
+
                 timer = generatorTimerReset;
             }
         }
