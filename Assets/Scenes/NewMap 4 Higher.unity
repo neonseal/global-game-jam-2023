@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7216578, g: 0.50580263, b: 0.46697176, a: 1}
+  m_IndirectSpecularColor: {r: 0.72181034, g: 0.50580096, b: 0.46701145, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7880,7 +7880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_RootOrder
-      value: 450
+      value: 449
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_LocalScale.x
@@ -13333,12 +13333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b081524beff78b943b3f2f75214f3a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  counterHUD: {fileID: 0}
   totalWater: 100
   totalEnergy: 160
   totalOrganic: 260
+  damageAmount: 10
   timerResetValue: 5
-  activeSystems: []
-  counterHUD: {fileID: 1849869432}
 --- !u!1 &768472859
 GameObject:
   m_ObjectHideFlags: 0
@@ -17218,6 +17218,43 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
   m_PrefabInstance: {fileID: 970116760}
   m_PrefabAsset: {fileID: 0}
+--- !u!84 &978419541
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WaterDepthMap
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 1024
+  m_Height: 1024
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!4 &981451230 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
@@ -19126,7 +19163,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_RootOrder
-      value: 448
+      value: 447
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_LocalScale.x
@@ -24387,7 +24424,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
       propertyPath: m_RootOrder
-      value: 446
+      value: 445
       objectReference: {fileID: 0}
     - target: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
       propertyPath: m_LocalScale.x
@@ -25020,8 +25057,8 @@ MonoBehaviour:
   waterStateImage: {fileID: 787157035}
   energyStateImage: {fileID: 1826375560}
   organicStateImage: {fileID: 473204347}
-  activeColor: {r: 0, g: 0, b: 0, a: 0}
-  depletedColor: {r: 0, g: 0, b: 0, a: 0}
+  activeImage: {fileID: 0}
+  depletedImage: {fileID: 0}
 --- !u!114 &1392563561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25185,43 +25222,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
   m_PrefabInstance: {fileID: 1317091837}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &1408680275
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: WaterDepthMap
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 1024
-  m_Height: 1024
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &1425006057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27378,8 +27378,8 @@ Transform:
   - {fileID: 1378432749}
   - {fileID: 1901522597}
   - {fileID: 1081587123}
-  - {fileID: 428398890}
   - {fileID: 1561320057}
+  - {fileID: 428398890}
   - {fileID: 1632242508}
   - {fileID: 329863652}
   - {fileID: 878576556}
@@ -27793,7 +27793,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_RootOrder
-      value: 449
+      value: 448
       objectReference: {fileID: 0}
     - target: {fileID: 911609686081874692, guid: d08b6963cf451f248a10115eaf9eb974, type: 3}
       propertyPath: m_LocalScale.x
@@ -34430,7 +34430,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
       propertyPath: m_RootOrder
-      value: 447
+      value: 446
       objectReference: {fileID: 0}
     - target: {fileID: 1454268313728148553, guid: 38d0b874ecfde484ca941a2aa1d16061, type: 3}
       propertyPath: m_LocalScale.x
