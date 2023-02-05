@@ -25,8 +25,8 @@ public class CounterHUD : MonoBehaviour {
     }
 
     private void UpdateCounterText() {
-        energyText.text = "ENG:" + energyCount.ToString();
-        waterText.text = "WTR:" + waterCount.ToString();
-        organicText.text = "ORG:" + organicCount.ToString();
+        energyText.text = "ENERGY: " + energyCount.ToString();
+        waterText.text = "WATER: " + waterCount.ToString();
+        organicText.text = "ORGANIC: " + organicCount.ToString();
     }
 }
