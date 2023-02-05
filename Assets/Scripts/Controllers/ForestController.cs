@@ -59,26 +59,30 @@ public class ForestController : MonoBehaviour {
             UpdateWaterResourceSupply();
             UpdateEnergyResourceSupply();
             UpdateOrganicResourceSupply();
+            AddMushroomGeneration();
             UpdateCounterHUD();
 
             // Apply damage
             if (generator.FailingCount > 0) {
                 // Check which resources are failing
                 if (totalWater <= 0) {
-                    // Damage Sunflowers and Decomposers
+                    // Damage Sunflowers and Trees
                     DamageResourceSupply(ComponentType.Sunflower);
-                    DamageResourceSupply(ComponentType.Decomposer);
+                    DamageResourceSupply(ComponentType.Tree);
                 } else if (totalOrganic <= 0) {
-                    // Damage trees and mushrooms
+                    // Damage trees and decomposers
                     DamageResourceSupply(ComponentType.Tree);
                     DamageResourceSupply(ComponentType.Mushroom);
 
                 } else if (totalEnergy <= 0) {
                     // Damage trees and decomposers
                     DamageResourceSupply(ComponentType.Tree);
-                    DamageResourceSupply(ComponentType.Sunflower);
+                    DamageResourceSupply(ComponentType.Decomposer);
 
                 }
+
+                // Damage mushrooms if any systems are 
+                DamageResourceSupply(ComponentType.Mushroom);
             }
 
             timer = timerResetValue;
@@ -133,9 +137,6 @@ public class ForestController : MonoBehaviour {
         // Calculate total resource resource generation power
         foreach (SunflowerComponent sunflower in sunflowerSupply) {
             energyGenerationRate += sunflower.GetCurrentGenerationRate();
-            if (energyGenerationRate < 40.0f) {
-                Debug.Log("DAMAGED SUNFLOWER");
-            }
         }
         totalEnergy += energyGenerationRate;
 
@@ -185,6 +186,20 @@ public class ForestController : MonoBehaviour {
         } else if (lastTotalValue <= 0 && totalOrganic > 0) {
             // Energy Replenished
             generator.UpdateResourceState(ComponentType.Decomposer, true);
+        }
+    }
+
+    private void AddMushroomGeneration() {
+        float mushroomGeneration = 0.0f;
+
+        foreach (MushroomComponent mushroom in mushroomSupply) {
+            mushroomGeneration += mushroom.GetCurrentGenerationRate();
+        }
+
+        if (mushroomGeneration > 0.0f) {
+            totalEnergy += mushroomGeneration;
+            totalWater += mushroomGeneration;
+            totalOrganic += mushroomGeneration;
         }
     }
 
@@ -240,7 +255,7 @@ public class ForestController : MonoBehaviour {
                     } else {
                         // Kill most recently placed 
                         treeSupply.Remove(treeSupply.LastOrDefault());
-                        DestroyImmediate(treeSupply[0]);
+                        DestroyImmediate(sunflowerSupply.LastOrDefault());
                     }
                 }
                 break;
@@ -255,14 +270,15 @@ public class ForestController : MonoBehaviour {
                     } else {
                         // Kill most recently placed component
                         sunflowerSupply.Remove(sunflowerSupply.LastOrDefault());
-                        DestroyImmediate(sunflower);
+                        DestroyImmediate(sunflowerSupply.LastOrDefault());
                     }
                 }                
                 break;
             case ComponentType.Mushroom:
                 if (mushroomSupply.Count() > 0) {
                     MushroomComponent mushroom = mushroomSupply.LastOrDefault();
-                    mushroom.health = AttemptDecrement(mushroom.health, damageAmount);
+                    // Apply smaller amount of damage to mushrooms
+                    mushroom.health = AttemptDecrement(mushroom.health, damageAmount / 5);
 
                     if (mushroom.health > 0) {
                         // Apply damage to most recently placed component

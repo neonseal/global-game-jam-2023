@@ -8,20 +8,20 @@ public class GeneratorHUD : MonoBehaviour
 {
     public Image Panel1;
     public Image waterStateImage, energyStateImage, organicStateImage;
-    public Color activeColor, depletedColor;
+    public Sprite activeImage, depletedImage;
     private bool waterActive = true;
     private bool energyActive = true;
     private bool organicActive = true;
 
     private void Awake() {
-        activeColor = Color.blue;
-        depletedColor = Color.red;
+        activeImage = Resources.Load<Sprite>("SystemRunning");
+        depletedImage = Resources.Load<Sprite>("SystemFailed");
     }
 
     private void Update() {
-        waterStateImage.color = waterActive ? activeColor : depletedColor;
-        energyStateImage.color = energyActive ? activeColor : depletedColor;
-        organicStateImage.color = organicActive ? activeColor : depletedColor;
+        waterStateImage.sprite = waterActive ? activeImage : depletedImage;
+        energyStateImage.sprite = energyActive ? activeImage : depletedImage;
+        organicStateImage.sprite = organicActive ? activeImage : depletedImage;
     }
 
     public void SetResourceState(ComponentType type, bool activeState) {
